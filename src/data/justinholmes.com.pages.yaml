@@ -9,13 +9,14 @@ listen:
     page_title: "Listen"
     no_video_bg: true
 
-cryptograss.eth:
-  template: cryptograss.njk
-  include_data_in_context:
-    - latest_git_commit
-  context:
-    page_title: "Cryptograss.eth | The Metadata is The Merch"
-    no_video_bg: true
+# cryptograss.eth:
+#   template: cryptograss.njk
+#   include_data_in_context:
+#     - latest_git_commit
+#     - chainData
+#   context:
+#     page_title: "Cryptograss.eth | The Metadata is The Merch"
+#     no_video_bg: true
 
 about:
   template: about.njk
@@ -60,32 +61,32 @@ shows:
     context:
         page_title: "Shows"
 
-add-live-set:
-  context:
-    page_title: "Add a live set"
-  template: "cryptograss/tools/add-live-set.njk"
+# add-live-set:
+#   context:
+#     page_title: "Add a live set"
+#   template: "cryptograss/tools/add-live-set.njk"
 
-add-show-for-stone-minting:
-  context:
-    page_title: "Make show available for stone minting"
-  include_data_in_context:
-    - shows
-  template: "cryptograss/tools/add-show-for-stone-minting.njk"
+# add-show-for-stone-minting:
+#   context:
+#     page_title: "Make show available for stone minting"
+#   include_data_in_context:
+#     - shows
+#   template: "cryptograss/tools/add-show-for-stone-minting.njk"
 
-add-striking_a_stone-minting:
-  context:
-    page_title: "striking a stone"
-  template: "cryptograss/about_set_stones.njk"
+# add-striking_a_stone-minting:
+#   context:
+#     page_title: "striking a stone"
+#   template: "cryptograss/about_set_stones.njk"
 
-setstone-color-palette:
-  context:
-    page_title: "Setstone color palette"
-  template: "cryptograss/tools/setstone-color-palette.njk"
+# setstone-color-palette:
+#   context:
+#     page_title: "Setstone color palette"
+#   template: "cryptograss/tools/setstone-color-palette.njk"
 
-sign-things:
-  template: "cryptograss/tools/sign-things.njk"
-  context:
-    page_title: "Sign things if you want!"
+# sign-things:
+#   template: "cryptograss/tools/sign-things.njk"
+#   context:
+#     page_title: "Sign things if you want!"
 
 all-songs:
   template: "songs/all-songs.njk"
@@ -111,3 +112,14 @@ kuba:
   template: kuba.njk
   context:
     page_title: "Kuba Hejhal, mír a vytrvalost"
+
+blue-railroad-test:
+  template: blue-railroad-test.njk
+  context:
+    page_title: "Blue Railroad Train Test"
+
+# contracts:
+#   template: cryptograss/contracts.njk
+#   context:
+#     page_title: "Deployed Contracts"
+#     no_video_bg: true

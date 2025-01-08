@@ -75,7 +75,8 @@ export function generateSetStonePages(shows, outputDir) {
                 renderPage({
                         template_path: 'reuse/single-set-stone.njk',
                         output_path: outputPath,
-                        context: context
+                    context: context,
+                    site: "cryptograss.live"
                     }
                 );
             });

@@ -1,20 +1,17 @@
-import common from './webpack.common.js';
+import jhCommon from './webpack.justinholmes.common.js';
+import cgCommon from './webpack.cryptograss.common.js';
 import {merge} from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
-import {outputDistDir, templateDir} from "./constants.js";
+import { outputjhcomDistDir, outputcryptograssDistDir, templateDir } from "./constants.js";
 import fs from "fs";
 import path from "path";
 
-let prodExport = merge(common, {
+const prodConfig = {
     mode: 'production',
     devtool: false,
     optimization: {
         minimizer: [new TerserPlugin()],
-    },
-    output: {
-        filename: '[name].bundle.js',
-        path: outputDistDir,
     },
     plugins: [
         new webpack.DefinePlugin({
@@ -23,12 +20,35 @@ let prodExport = merge(common, {
         {
             apply: (compiler) => {
                 compiler.hooks.done.tap('CopyHtaccessPlugin', () => {
-                    fs.copyFileSync(path.resolve(templateDir, 'pages/.htaccess'), path.resolve(outputDistDir, '.htaccess'));
-                    console.log('.htaccess file copied');
+                    // Copy .htaccess for both sites
+                    fs.copyFileSync(
+                        path.resolve(templateDir, 'shared/.htaccess'),
+                        path.resolve(outputjhcomDistDir, '.htaccess')
+                    );
+                    fs.copyFileSync(
+                        path.resolve(templateDir, 'shared/.htaccess'),
+                        path.resolve(outputcryptograssDistDir, '.htaccess')
+                    );
+                    console.log('.htaccess files copied');
                 });
             },
         },
     ]
-});
+};
 
-export default prodExport;
+export default [
+    merge(jhCommon, {
+        ...prodConfig,
+        output: {
+            filename: '[name].bundle.js',
+            path: outputjhcomDistDir,
+        }
+    }),
+    merge(cgCommon, {
+        ...prodConfig,
+        output: {
+            filename: '[name].bundle.js',
+            path: outputcryptograssDistDir,
+        }
+    })
+];

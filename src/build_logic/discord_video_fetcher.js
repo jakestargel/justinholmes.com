@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
-import { fetchedVideosDir } from './constants.js';
+import { fetchedAssetsDir } from './constants.js';
 import { blueRailroadContractAddress } from '../js/constants.js';
 
 dotenv.config();

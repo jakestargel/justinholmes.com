@@ -1,20 +1,20 @@
 import nunjucks from "nunjucks";
-import {get_image_from_asset_mapping, imageMapping, unusedImages} from "../asset_builder.js";
-import {templateDir} from "../constants.js";
+import { get_image_from_asset_mapping, imageMapping, unusedImages } from "../asset_builder.js";
+import { templateDir } from "../constants.js";
 import {slugify} from "./text_utils.js";
-import {pickers} from "../show_and_set_data.js";
+import { pickers } from "../show_and_set_data.js";
+import path from 'path';
 
 const REFERENCE_BLOCK = 20612385; // Example block number
 const REFERENCE_TIMESTAMP = 1724670731; // Unix timestamp in seconds
 const AVERAGE_BLOCK_TIME = 12.12; // Average block time in seconds
 
-let _helpers_are_registered = false;
+let _helpers_are_registered = [];
 
-let env = nunjucks.configure(templateDir, {autoescape: false});
+export function registerHelpers(site) {
 
-export function registerHelpers() {
-
-    if (_helpers_are_registered) {
+    let env = nunjucks.configure([templateDir, path.join(templateDir, site)], { autoescape: false })
+    if (_helpers_are_registered.includes(site)) {
         console.warn('Helpers are already registered');
         return;
     }
@@ -76,5 +76,5 @@ export function registerHelpers() {
         return foundImage
     });
 
-    _helpers_are_registered = true;
+    _helpers_are_registered.push(site);
 }

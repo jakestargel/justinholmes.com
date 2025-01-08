@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import { stringify } from "../js/utils.js"
-import {dataDir, outputBaseDir, outputPrimaryDir} from "./constants.js";
+import { dataDir, outputBaseDir, outputPrimaryRootDir } from "./constants.js";
+import { setStoneContractAddress, blueRailroadContractAddress, revealerContractAddress } from "../js/constants.js";
 
 const chain_data_dir = path.resolve(outputBaseDir, '_prebuild_chain_data');
 
