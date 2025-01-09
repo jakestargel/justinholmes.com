@@ -3,7 +3,7 @@ import {optimismSepolia, arbitrum} from '@wagmi/core/chains';
 import Web3 from 'web3';
 import $ from 'jquery';
 import {createWeb3Modal} from '@web3modal/wagmi'
-import {setStoneContractAddress} from '../../constants.js';
+import { setStoneContractAddress } from '../../../../build_logic/constants.js';
 
 export const config = createConfig({
     chains: [optimismSepolia, arbitrum],
@@ -44,7 +44,7 @@ $('#generate-rabbit-secrets-button').click(function () {
 
 const web3 = new Web3();
 const projectId = '3e6e7e58a5918c44fa42816d90b735a6'
-import {setStoneABI as contractABI} from "../../../abi/setStoneABI.js";
+import { setStoneABI as contractABI } from "../../../../abi/setStoneABI.js";
 
 function keccak256(value) {
     return web3.utils.soliditySha3({type: "string", value: value});

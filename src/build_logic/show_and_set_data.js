@@ -8,8 +8,15 @@ import {slugify} from "./utils/text_utils.js";
 import {deserializeTimeData} from "./chaindata_db.js";
 
 import {DateTime} from 'luxon';
-import {dataDir, imagesSourceDir, showsDir} from "./constants.js";
+import { getProjectDirs } from "./dirs.js";
 
+
+
+let songAndSetData = null;
+
+export function processShowAndSetData() {
+
+    const { dataDir, imagesSourceDir, showsDir } = getProjectDirs();
 
 // Log the time.
 console.time("show-and-song-data");
@@ -585,4 +592,14 @@ shows = Object.fromEntries(Object.entries(shows).sort(function (a, b) {
     return parseInt(b[0].split('-')[1]) - parseInt(a[0].split('-')[1]);
 }));
 
-export {shows, songs, pickers, songsByVideoGame, songsByProvenance};
+    return { shows, songs, pickers, songsByVideoGame, songsByProvenance };
+
+}
+
+export function getShowAndSetData() {
+    if (songAndSetData === null) {
+        songAndSetData = processShowAndSetData();
+    }
+    return songAndSetData;
+}
+

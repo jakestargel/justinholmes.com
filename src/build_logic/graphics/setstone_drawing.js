@@ -1,4 +1,4 @@
-import { nesPalette } from './constants.js';
+import { nesPalette } from './palettes.js';
 import { createCanvas } from 'canvas';
 
 // Convert hex color to RGB

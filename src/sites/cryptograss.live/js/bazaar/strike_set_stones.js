@@ -5,9 +5,9 @@ import {createWeb3Modal} from '@web3modal/wagmi'
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css'; // optional for styling
 import jazzicon from 'jazzicon';
-import {generateDiamondPattern, generateDiamondPatternFromNesPalette} from '../../setstone_drawing.js';
-import {nesPalette} from '../../constants.js';
-import {setStoneContractAddress} from '../../constants.js';
+import { generateDiamondPattern, generateDiamondPatternFromNesPalette } from '../../../../build_logic/graphics/setstone_drawing.js';
+import { nesPalette } from '../../../../build_logic/graphics/palettes.js';
+import { setStoneContractAddress } from '../../../../build_logic/constants.js';
 import {watchConnections} from '@wagmi/core'
 import {Toast} from 'bootstrap';
 import $ from 'jquery';
@@ -24,7 +24,7 @@ export const config = createConfig({
 
 const web3 = new Web3();
 const projectId = '3e6e7e58a5918c44fa42816d90b735a6';
-import {setStoneABI} from "../../../abi/setStoneABI.js";
+import { setStoneABI } from "../../../../abi/setStoneABI.js";
 
 
 function keccak256(value) {

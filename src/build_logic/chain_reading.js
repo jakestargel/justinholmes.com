@@ -3,7 +3,7 @@ import {createConfig, http, readContract, fetchBlockNumber, fetchEnsName, getBlo
 import {mainnet, optimism, optimismSepolia, arbitrum} from '@wagmi/core/chains';
 import {brABI as abi} from "../abi/blueRailroadABI.js";
 import {setStoneABI} from "../abi/setStoneABI.js";
-import {setStoneContractAddress, blueRailroadContractAddress} from "../js/constants.js";
+import { setStoneContractAddress, blueRailroadContractAddress } from "./constants.js";
 import {getVowelsoundContributions} from "./revealer_utils.js";
 import Web3 from 'web3';
 
@@ -12,12 +12,13 @@ import {config as dotenvConfig} from 'dotenv';
 import {fileURLToPath} from "url";
 import path from "path";
 import fs from "fs";
-import {showsDir} from "./constants.js";
+import { getProjectDirs } from "./dirs.js";
 
 const env = process.env.NODE_ENV || 'development';
 dotenvConfig({path: `.env`});
 
 export async function fetchChainDataForShows(shows, config) {
+    const { showsDir } = getProjectDirs();
     console.time("chain-data-for-shows");
     // We expect shows to be the result of iterating through the show YAML files.
     // Now we'll add onchain data from those shows.

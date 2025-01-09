@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import {generateDiamondPatternFromNesPalette} from '../js/setstone_drawing.js'
-import {renderPage} from "./utils/rendering_utils.js";
+import { generateDiamondPatternFromNesPalette } from "./graphics/setstone_drawing.js";
 import {imageMapping} from "./asset_builder.js";
-import {nesPalette} from "../js/constants.js";
+import { nesPalette } from "./graphics/palettes.js";
+import { renderPage } from "./utils/rendering_utils.js";
 
 /**
  * Generates and saves NFT metadata JSON files for each setstone in the shows.

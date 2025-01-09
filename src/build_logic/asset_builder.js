@@ -3,14 +3,11 @@ import path from 'path';
 import crypto from 'crypto';
 import {globSync} from 'glob';
 import yaml from "js-yaml";
-import { fetchedAssetsDir, imagesSourceDir, outputPrimaryRootDir } from "./constants.js";
+import { getProjectDirs } from "./dirs.js";
 
 console.time('asset-builder')
 
-const imageDirPattern = `${imagesSourceDir}/**/*.{png,jpg,jpeg,gif,avif,svg,webp,mp4}`
-const assetsOutputDir = path.join(outputPrimaryRootDir, 'assets');
-const imageOutputDir = path.join(assetsOutputDir, 'images');
-const mappingFilePath = path.join(outputPrimaryRootDir, 'imageMapping.json');
+
 
 let imageMapping = {};
 let unusedImages = new Set();
@@ -18,6 +15,16 @@ let unusedImages = new Set();
 let _assets_gathered = false;
 
 function gatherAssets() {
+
+    const { imagesSourceDir, outputPrimaryRootDir, srcDir } = getProjectDirs();
+    const imageDirPattern = `${imagesSourceDir}/**/*.{png,jpg,jpeg,gif,avif,svg,webp,mp4}`
+
+    const assetsOutputDir = path.join(outputPrimaryRootDir, 'assets');
+    const imageOutputDir = path.join(assetsOutputDir, 'images');
+    const mappingFilePath = path.join(outputPrimaryRootDir, 'imageMapping.json');
+
+    const fetchedAssetsDir = path.join(srcDir, 'fetched_assets');
+
     console.time('asset-gathering');
 
     // Ensure output directories exist

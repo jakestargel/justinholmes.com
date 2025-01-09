@@ -1,10 +1,10 @@
+import { getProjectDirs } from "./dirs.js";
 import { slugify } from "./utils/text_utils.js";
 import { renderPage } from "./utils/rendering_utils.js";
-import { dataDir, outputPrimaryRootDir, templateDir, fetchedAssetsDir } from "./constants.js";
 import fs from 'fs';
 import yaml from 'js-yaml';
 import path from 'path';
-import { songs, shows, songsByProvenance, pickers } from "./show_and_set_data.js";
+import { getShowAndSetData } from "./show_and_set_data.js";
 import { marked } from 'marked';
 import { gatherAssets, unusedImages, imageMapping } from './asset_builder.js';
 import { deserializeChainData, serializeChainData } from './chaindata_db.js';
@@ -13,9 +13,11 @@ import { generateSetStonePages, renderSetStoneImages } from './setstone_utils.js
 import { registerHelpers } from './utils/template_helpers.js';
 import { appendChainDataToShows, fetch_chaindata } from './chain_reading.js';
 import nunjucks from "nunjucks";
-import { blueRailroadContractAddress } from '../js/constants.js';
+import { blueRailroadContractAddress } from './constants.js';
 
 async function verifyBlueRailroadVideos() {
+    const { fetchedAssetsDir } = getProjectDirs();
+    const { shows, songs, pickers } = getShowAndSetData();
     const chainId = '10';
     const metadataPath = path.join(fetchedAssetsDir, `${chainId}-${blueRailroadContractAddress}.json`);
 
@@ -54,27 +56,25 @@ async function verifyBlueRailroadVideos() {
     return Object.entries(metadata).reverse()
 }
 
-const ensureDirectories = () => {
-    const dirs = [
-        path.resolve(outputPrimaryRootDir, 'cryptograss/assets'),
-        path.resolve(outputPrimaryRootDir, 'setstones'),
-        path.resolve(outputPrimaryRootDir, 'cryptograss/tools'),
-        path.resolve(outputPrimaryRootDir, 'cryptograss/bazaar'),
-    ];
 
-    dirs.forEach(dir => {
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-    });
-};
+export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
+    const { outputPrimaryRootDir, dataDir, templateDir } = getProjectDirs();
+    const { shows, songs, pickers, songsByProvenance } = getShowAndSetData();
 
-const getTemplateDir = (site) => {
-    return path.join(templateDir, site);
-};
+    const ensureDirectories = () => {
+        const dirs = [
+            path.resolve(outputPrimaryRootDir, 'cryptograss/assets'),
+            path.resolve(outputPrimaryRootDir, 'setstones'),
+            path.resolve(outputPrimaryRootDir, 'cryptograss/tools'),
+            path.resolve(outputPrimaryRootDir, 'cryptograss/bazaar'),
+        ];
 
-export const runPrimaryBuild = async (skip_chain_data_fetch, site = "justinholmes.com") => {
-    const siteTemplateDir = getTemplateDir(site);
+        dirs.forEach(dir => {
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+        });
+    };
     ensureDirectories();
     console.time('primary-build');
 
@@ -145,8 +145,10 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site = "justinholme
         'chainData': chainData,
     };
 
-    // Copy client-side partials to the output directory
-    fs.cpSync(path.join(templateDir, 'client_partials'), path.join(outputSiteDir, 'client_partials'), { recursive: true });
+    if (site === "justinholmes.com") {
+        // Copy client-side partials to the output directory
+        fs.cpSync(path.join(templateDir, 'client_partials'), path.join(outputSiteDir, 'client_partials'), { recursive: true });
+    }
 
 
     ////////////////////

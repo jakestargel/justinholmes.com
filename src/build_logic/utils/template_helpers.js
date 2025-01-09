@@ -1,8 +1,8 @@
 import nunjucks from "nunjucks";
 import { get_image_from_asset_mapping, imageMapping, unusedImages } from "../asset_builder.js";
-import { templateDir } from "../constants.js";
+import { getProjectDirs } from "../dirs.js";
 import {slugify} from "./text_utils.js";
-import { pickers } from "../show_and_set_data.js";
+import { getShowAndSetData } from "../show_and_set_data.js";
 import path from 'path';
 
 const REFERENCE_BLOCK = 20612385; // Example block number
@@ -12,6 +12,7 @@ const AVERAGE_BLOCK_TIME = 12.12; // Average block time in seconds
 let _helpers_are_registered = [];
 
 export function registerHelpers(site) {
+    const { templateDir } = getProjectDirs();
 
     let env = nunjucks.configure([templateDir, path.join(templateDir, site)], { autoescape: false })
     if (_helpers_are_registered.includes(site)) {
@@ -26,6 +27,7 @@ export function registerHelpers(site) {
 
     env.addFilter('showInstrumentalist', function (song_play, instrument_to_show) {
         const ensemble = song_play._set._show.ensemble
+        const { pickers } = getShowAndSetData();
 
         // We have the ensemble object; iterate through artists and their instruments.
         for (let [picker_name, instruments] of Object.entries(ensemble)) {
@@ -74,6 +76,12 @@ export function registerHelpers(site) {
             unusedImages.delete(originalPath);
         }
         return foundImage
+    });
+
+    env.addGlobal('getCryptograssUrl', () => {
+        return process.env.NODE_ENV === 'development'
+            ? 'http://localhost:4050'
+            : 'https://cryptograss.live';
     });
 
     _helpers_are_registered.push(site);
