@@ -357,7 +357,7 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
 
 
     ///////////////////////////
-    // Chapter 4.2: Musician pages
+    // Chapter 4.3: Musician pages
     ///////////////////////////
 
     if (site === "justinholmes.com") { // TODO: This is a hack.  We need to make this more general.
