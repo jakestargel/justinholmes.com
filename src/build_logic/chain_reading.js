@@ -106,6 +106,9 @@ export async function appendSetStoneDataToShows(showsChainData, config) {
 
 
             for (let setStoneId of setStoneIds) {
+
+                // This is the model for set stones.
+                // TODO: Put this in a more logical place - we need some kind of a merch models module.
                 let setstone = {}
                 number_of_stones_in_sets++;
 

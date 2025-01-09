@@ -297,7 +297,7 @@ for (let i = 0; i < liveShowYAMLs.length; i++) {
             if (songPlay._set._show.hasOwnProperty("has_set_stones_available")) {
                 console.log("llamas");
             }
-            //
+            // TODO: What's going on here?
             // if (set.hasOwnProperty('setstones')) {
             //     songPlay['set_stones'] = set['set_stones'];
             // }

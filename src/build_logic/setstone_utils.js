@@ -27,6 +27,7 @@ export function generateSetStonePages(shows, outputDir) {
                     name: `Set Stone for show ${showId}`,
 
                     // TODO: Does this become the show page?
+                    // TODO: The image in the metadata... that's gonna be on cryptograss.live, right?
                     external_url: `https://justinholmes.com/cryptograss/bazaar/setstones/${showId}.html`,
                     description: `Set Stone from artist with id=${show.artist_id} and show on ${show.blockheight}`,
                     image: `https://justinholmes.com/assets/images/setstones/${set.shape}-${setstone.color[0]}-${setstone.color[1]}-${setstone.color[2]}.png`, 
