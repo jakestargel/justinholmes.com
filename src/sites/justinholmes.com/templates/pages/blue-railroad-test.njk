@@ -1,0 +1,22 @@
+{% extends "shared/layouts/base.njk" %}
+
+{% block main %}
+<div class="container mt-5">
+    <h1>Blue Railroad Train Test</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="blueRailroadCanvas" width="256" height="256"></canvas>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { drawBlueRailroad } from '/js/blue_railroad_art.js';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const canvas = document.getElementById('blueRailroadCanvas');
+        const ctx = canvas.getContext('2d');
+        drawBlueRailroad(ctx, canvas.width, canvas.height);
+    });
+</script>
+{% endblock %} 
