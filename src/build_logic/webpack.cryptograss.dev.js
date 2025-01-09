@@ -1,8 +1,8 @@
 import common from './webpack.cryptograss.common.js';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
-import { outputPrimaryDir } from './webpack.cryptograss.common.js';
 import path from 'path';
+import { getProjectDirs } from './dirs.js';
 
 const skipChainData = process.env.SKIP_CHAIN_DATA === 'true';
 
@@ -22,7 +22,7 @@ const devExport = merge(common, {
         },
         // TODO: Enforce this matching the CopyPlugin
         static: [{
-            directory: path.join(outputPrimaryDir, 'cryptograss/assets'),
+            directory: path.join(getProjectDirs().outputPrimarySiteDir, 'assets'),
             publicPath: '/assets',
         }],
         devMiddleware: {

@@ -31,9 +31,12 @@ export function initProjectDirs(site_name) {
 
     // Output directories
     projectDirs.outputBaseDir = path.resolve(projectDirs.projectRootDir, 'output');
+
+    projectDirs.outputDistDir = path.resolve(projectDirs.outputBaseDir, site_name + '.dist');
+
     projectDirs.outputPrimaryRootDir = path.resolve(projectDirs.outputBaseDir, '_prebuild_output');
 
-    projectDirs.outputDistDir = path.resolve(projectDirs.outputPrimaryRootDir, site_name, '.dist');
+    projectDirs.outputPrimarySiteDir = path.resolve(projectDirs.outputPrimaryRootDir, site_name);
 
     projectDirs.chainDataDir = path.resolve(projectDirs.outputBaseDir, '_prebuild_chain_data');
 

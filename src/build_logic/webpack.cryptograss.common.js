@@ -10,14 +10,15 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { runPrimaryBuild } from './primary_builder.js';
 
 const skipChainData = process.env.SKIP_CHAIN_DATA;
-const { outputDistDir, outputPrimaryRootDir, siteDir } = getProjectDirs();
-export const outputPrimaryDir = await runPrimaryBuild(skipChainData, "cryptograss.live");
+const { outputPrimarySiteDir, outputPrimaryRootDir, outputDistDir, siteDir } = getProjectDirs();
 
-const templatesPattern = path.join(outputPrimaryDir, '**/*.html');
+await runPrimaryBuild(skipChainData, "cryptograss.live");
+
+const templatesPattern = path.join(outputPrimarySiteDir, '**/*.html');
 const templateFiles = glob.sync(templatesPattern);
 
 const htmlPluginInstances = templateFiles.map(templatePath => {
-    const relativePath = path.relative(outputPrimaryDir, templatePath);
+    const relativePath = path.relative(outputPrimarySiteDir, templatePath);
 
     // if (relativePath.startsWith('cryptograss/tools/add-live-set')) {
     //     var chunks = ['main', 'add_live_set'];
@@ -57,12 +58,12 @@ export default {
         new CopyPlugin({
             patterns: [
                 {
-                    from: path.resolve(outputPrimaryRootDir, 'cryptograss/assets'),
+                    from: path.resolve(outputPrimarySiteDir, 'assets'),
                     to: path.resolve(outputDistDir, 'assets'),
                     noErrorOnMissing: true
                 },
                 {
-                    from: path.resolve(outputPrimaryRootDir, 'setstones'),
+                    from: path.resolve(outputPrimarySiteDir, 'setstones'),
                     to: path.resolve(outputDistDir, 'setstones'),
                     noErrorOnMissing: true
                 },
