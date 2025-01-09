@@ -4,13 +4,20 @@ import { generateDiamondPatternFromNesPalette } from "./graphics/setstone_drawin
 import {imageMapping} from "./asset_builder.js";
 import { nesPalette } from "./graphics/palettes.js";
 import { renderPage } from "./utils/rendering_utils.js";
+import { getProjectDirs } from "./locations.js";
+
+
+0
 
 /**
+ * 
+ * 
  * Generates and saves NFT metadata JSON files for each setstone in the shows.
  * @param {Object} showsWithChainData - Object containing show data with chain information.
  * @param {string} outputDir - Directory to save the generated JSON files.
  */
 export function generateSetStonePages(shows, outputDir) {
+    const { cryptograssUrl } = getProjectDirs();
     for (const [showId, show] of Object.entries(shows)) {
         // We're only interested in shows that have set stones.
         if (!show.has_set_stones_available) {
@@ -30,7 +37,8 @@ export function generateSetStonePages(shows, outputDir) {
                     // TODO: The image in the metadata... that's gonna be on cryptograss.live, right?
                     external_url: `https://justinholmes.com/cryptograss/bazaar/setstones/${showId}.html`,
                     description: `Set Stone from artist with id=${show.artist_id} and show on ${show.blockheight}`,
-                    image: `https://justinholmes.com/assets/images/setstones/${set.shape}-${setstone.color[0]}-${setstone.color[1]}-${setstone.color[2]}.png`, 
+                    // The images live on cryptograss.live, so we need to use that URL.  Also, we don't want to use the variable, because this is actual token metadata.
+                    image: `https://cryptograss.live/assets/images/setstones/${set.shape}-${setstone.color[0]}-${setstone.color[1]}-${setstone.color[2]}.png`, 
                     attributes: [
                         {
                             trait_type: "Shape",

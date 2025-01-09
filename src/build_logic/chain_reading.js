@@ -12,7 +12,7 @@ import {config as dotenvConfig} from 'dotenv';
 import {fileURLToPath} from "url";
 import path from "path";
 import fs from "fs";
-import { getProjectDirs } from "./dirs.js";
+import { getProjectDirs } from "./locations.js";
 
 const env = process.env.NODE_ENV || 'development';
 dotenvConfig({path: `.env`});

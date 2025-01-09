@@ -1,4 +1,4 @@
-import { initProjectDirs, getProjectDirs } from './dirs.js';
+import { initProjectDirs, getProjectDirs } from './locations.js';
 initProjectDirs("cryptograss.live");
 
 import fs from 'fs';

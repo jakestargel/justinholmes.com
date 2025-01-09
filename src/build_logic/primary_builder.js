@@ -1,4 +1,4 @@
-import { getProjectDirs } from "./dirs.js";
+import { getProjectDirs } from "./locations.js";
 import { slugify } from "./utils/text_utils.js";
 import { renderPage } from "./utils/rendering_utils.js";
 import fs from 'fs';

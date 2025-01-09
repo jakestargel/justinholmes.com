@@ -1,4 +1,4 @@
-import { initProjectDirs, getProjectDirs } from './dirs.js';
+import { initProjectDirs, getProjectDirs } from './locations.js';
 const dirs = initProjectDirs("justinholmes.com");
 
 import fs from 'fs';

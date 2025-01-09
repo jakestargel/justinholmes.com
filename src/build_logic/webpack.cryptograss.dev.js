@@ -2,7 +2,7 @@ import common from './webpack.cryptograss.common.js';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import path from 'path';
-import { getProjectDirs } from './dirs.js';
+import { getProjectDirs } from './locations.js';
 
 const skipChainData = process.env.SKIP_CHAIN_DATA === 'true';
 

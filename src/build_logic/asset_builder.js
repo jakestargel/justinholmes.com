@@ -3,7 +3,7 @@ import path from 'path';
 import crypto from 'crypto';
 import {globSync} from 'glob';
 import yaml from "js-yaml";
-import { getProjectDirs } from "./dirs.js";
+import { getProjectDirs } from "./locations.js";
 
 console.time('asset-builder')
 

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { stringify } from "./utils.js"
-import { getProjectDirs } from "./dirs.js";
+import { getProjectDirs } from "./locations.js";
 
 
 export function serializeChainData(chainData) {

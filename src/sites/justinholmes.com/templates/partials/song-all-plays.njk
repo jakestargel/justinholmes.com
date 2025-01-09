@@ -7,7 +7,7 @@
         on {{ song_play._set._show.local_date }} {% if instrument_to_show %}({{ song_play | showInstrumentalist(instrument_to_show) }}){% endif %}
         {% for stone in song_play._set.setstones %}
             <a href="{{ stone.resource_url }}">
-                <img class="stone-in-long-list" src="/assets/images/setstones/{{ stone.tokenId }}.png">
+                <img class="stone-in-long-list" src="{{getCryptograssUrl()}}ones/{{ stone.tokenId }}.png">
             </a>
         {% endfor %}
         </li>

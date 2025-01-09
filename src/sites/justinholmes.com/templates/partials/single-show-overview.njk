@@ -35,9 +35,10 @@
         </div>
         {% for set_nbumber, set in show.sets %}
             {% for stone in set.setstones %}
-                <a href="/artifacts/setstones/{{show.show_id}}-{{stone.tokenId}}.html"
+
+                <a href="{{getCryptograssUrl()}}/artifacts/setstones/{{show.show_id}}-{{stone.tokenId}}.html"
                    target="_blank"><img
-                        src="/assets/images/setstones/{{ stone.tokenId }}.png"
+                        src="{{getCryptograssUrl()}}/assets/images/setstones/{{ stone.tokenId }}.png"
                         style="width: 50px;"></a>
             {% endfor %}
         {% endfor %}

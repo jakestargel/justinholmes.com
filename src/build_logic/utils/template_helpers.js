@@ -1,6 +1,6 @@
 import nunjucks from "nunjucks";
 import { get_image_from_asset_mapping, imageMapping, unusedImages } from "../asset_builder.js";
-import { getProjectDirs } from "../dirs.js";
+import { getProjectDirs } from "../locations.js";
 import {slugify} from "./text_utils.js";
 import { getShowAndSetData } from "../show_and_set_data.js";
 import path from 'path';
@@ -79,9 +79,7 @@ export function registerHelpers(site) {
     });
 
     env.addGlobal('getCryptograssUrl', () => {
-        return process.env.NODE_ENV === 'development'
-            ? 'http://localhost:4050'
-            : 'https://cryptograss.live';
+        return getProjectDirs().cryptograssUrl;
     });
 
     _helpers_are_registered.push(site);

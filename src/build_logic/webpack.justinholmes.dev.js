@@ -1,7 +1,7 @@
 import common from './webpack.justinholmes.common.js';
 import webpack from 'webpack';
 import { merge } from 'webpack-merge';
-import { getProjectDirs } from './dirs.js';
+import { getProjectDirs } from './locations.js';
 import path from 'path';
 
 const { outputDistDir, outputPrimaryRootDir } = getProjectDirs();

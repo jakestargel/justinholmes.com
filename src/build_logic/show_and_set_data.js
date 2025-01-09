@@ -8,7 +8,7 @@ import {slugify} from "./utils/text_utils.js";
 import {deserializeTimeData} from "./chaindata_db.js";
 
 import {DateTime} from 'luxon';
-import { getProjectDirs } from "./dirs.js";
+import { getProjectDirs } from "./locations.js";
 
 
 
