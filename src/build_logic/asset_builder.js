@@ -3,14 +3,11 @@ import path from 'path';
 import crypto from 'crypto';
 import {globSync} from 'glob';
 import yaml from "js-yaml";
-import {imagesSourceDir, outputPrimaryDir} from "./constants.js";
+import { getProjectDirs } from "./locations.js";
 
 console.time('asset-builder')
 
-const imageDirPattern = `${imagesSourceDir}/**/*.{png,jpg,jpeg,gif,avif,svg,webp,mp4}`
-const assetsOutputDir = path.join(outputPrimaryDir, 'assets');
-const imageOutputDir = path.join(assetsOutputDir, 'images');
-const mappingFilePath = path.join(outputPrimaryDir, 'imageMapping.json');
+
 
 let imageMapping = {};
 let unusedImages = new Set();
@@ -18,15 +15,31 @@ let unusedImages = new Set();
 let _assets_gathered = false;
 
 function gatherAssets() {
+
+    const { imagesSourceDir, outputPrimaryRootDir, srcDir } = getProjectDirs();
+    const imageDirPattern = `${imagesSourceDir}/**/*.{png,jpg,jpeg,gif,avif,svg,webp,mp4}`
+
+    const assetsOutputDir = path.join(outputPrimaryRootDir, 'assets');
+    const imageOutputDir = path.join(assetsOutputDir, 'images');
+    const mappingFilePath = path.join(outputPrimaryRootDir, 'imageMapping.json');
+
+    const fetchedAssetsDir = path.join(srcDir, 'fetched_assets');
+
     console.time('asset-gathering');
-    // Ensure the output directory exists
+
+    // Ensure output directories exist
     if (!fs.existsSync(imageOutputDir)) {
         fs.mkdirSync(imageOutputDir, {recursive: true});
+    }
+    if (!fs.existsSync(assetsOutputDir)) {
+        fs.mkdirSync(assetsOutputDir, { recursive: true });
     }
 
     if (_assets_gathered) {
         throw new Error("Assets have already been gathered.")
     }
+
+    // Process regular images
     let imageFiles = globSync(imageDirPattern);
 
     imageFiles.forEach(file => {
@@ -60,9 +73,26 @@ function gatherAssets() {
         unusedImages.add(originalPath);
     });
 
-    // Write the mapping to a JSON file
+    // Simply copy the fetched assets directory
+    if (fs.existsSync(fetchedAssetsDir)) {
+        const fetchedOutputDir = path.join(assetsOutputDir, 'fetched');
+        fs.mkdirSync(fetchedOutputDir, { recursive: true });
+
+        const fetchedFiles = globSync(`${fetchedAssetsDir}/**/*`, { nodir: true });
+        fetchedFiles.forEach(file => {
+            const relativePath = path.relative(fetchedAssetsDir, file);
+            const outputPath = path.join(fetchedOutputDir, relativePath);
+
+            // Ensure the output directory exists
+            fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+
+            // Copy the file
+            fs.copyFileSync(file, outputPath);
+        });
+    }
+
+    // Write the image mapping to a JSON file
     fs.writeFileSync(mappingFilePath, JSON.stringify(imageMapping, null, 2));
-    console.log('Image processing complete. Mapping saved to:', mappingFilePath, 'Found', Object.keys(imageMapping).length, 'images.');
     console.timeEnd('asset-gathering');
 
     let auxDataFile = fs.readFileSync("src/data/aux_data.yaml");
@@ -79,7 +109,7 @@ function getImageMapping() {
     if (!_assets_gathered) {
         throw new Error("Need to gather assets before using image mapping.")
     }
-    const mappingFilePath = path.join(outputPrimaryDir, 'imageMapping.json');
+    const mappingFilePath = path.join(outputPrimaryRootDir, 'imageMapping.json');
     const jsonData = fs.readFileSync(mappingFilePath, {encoding: 'utf8'});
     return JSON.parse(jsonData);
 }

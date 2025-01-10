@@ -1,10 +1,10 @@
+import { getProjectDirs } from "./locations.js";
 import { slugify } from "./utils/text_utils.js";
 import { renderPage } from "./utils/rendering_utils.js";
-import { dataDir, outputPrimaryDir, templateDir } from "./constants.js";
 import fs from 'fs';
 import yaml from 'js-yaml';
 import path from 'path';
-import { songs, shows, songsByProvenance, pickers } from "./show_and_set_data.js";
+import { getShowAndSetData } from "./show_and_set_data.js";
 import { marked } from 'marked';
 import { gatherAssets, unusedImages, imageMapping } from './asset_builder.js';
 import { deserializeChainData, serializeChainData } from './chaindata_db.js';
@@ -13,18 +13,79 @@ import { generateSetStonePages, renderSetStoneImages } from './setstone_utils.js
 import { registerHelpers } from './utils/template_helpers.js';
 import { appendChainDataToShows, fetch_chaindata } from './chain_reading.js';
 import nunjucks from "nunjucks";
+import { blueRailroadContractAddress } from './constants.js';
 
-export async function runPrimaryBuild(skip_chain_data_fetch=false) {
-    console.time('primary-build');
-    // Prepare output directories.
+async function verifyBlueRailroadVideos() {
+    const { fetchedAssetsDir } = getProjectDirs();
+    const { shows, songs, pickers } = getShowAndSetData();
+    const chainId = '10';
+    const metadataPath = path.join(fetchedAssetsDir, `${chainId}-${blueRailroadContractAddress}.json`);
 
-    // Erase the output directory if it exists
-    if (fs.existsSync(outputPrimaryDir)) {
-        fs.rmSync(outputPrimaryDir, { recursive: true });
+    if (!fs.existsSync(metadataPath)) {
+        throw new Error(
+            'Blue Railroad metadata not found! Please run:\n' +
+            'npm run fetch-video-metadata\n' +
+            'npm run download-videos'
+        );
     }
 
-    // And then make a fresh one.
-    fs.mkdirSync(outputPrimaryDir, { recursive: true });
+    const metadata = JSON.parse(fs.readFileSync(metadataPath));
+    const missingVideos = [];
+
+    for (const [tokenId, data] of Object.entries(metadata)) {
+        if (!data.video_url) continue; // Skip entries without videos
+
+        const expectedVideoPath = path.join(
+            fetchedAssetsDir,
+            `${chainId}-${blueRailroadContractAddress}-${tokenId}.mp4`
+        );
+
+        if (!fs.existsSync(expectedVideoPath)) {
+            missingVideos.push(tokenId);
+        }
+    }
+
+    if (missingVideos.length > 0) {
+        throw new Error(
+            `Missing videos for tokens: ${missingVideos.join(', ')}\n` +
+            'Please run: npm run download-videos'
+        );
+    }
+
+    // Sort by latest first.
+    return Object.entries(metadata).reverse()
+}
+
+
+export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
+    const { outputPrimaryRootDir, dataDir, templateDir } = getProjectDirs();
+    const { shows, songs, pickers, songsByProvenance } = getShowAndSetData();
+
+    const ensureDirectories = () => {
+        const dirs = [
+            path.resolve(outputPrimaryRootDir, 'cryptograss/assets'),
+            path.resolve(outputPrimaryRootDir, 'setstones'),
+            path.resolve(outputPrimaryRootDir, 'cryptograss/tools'),
+            path.resolve(outputPrimaryRootDir, 'cryptograss/bazaar'),
+        ];
+
+        dirs.forEach(dir => {
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+        });
+    };
+    ensureDirectories();
+    console.time('primary-build');
+
+    // TODO: Do we need to make sure the root output directory exists?
+
+    // ...now, same for the site-specific output directory.
+    const outputSiteDir = path.resolve(outputPrimaryRootDir, site);
+    if (fs.existsSync(outputSiteDir)) {
+        fs.rmSync(outputSiteDir, { recursive: true });
+    }
+    fs.mkdirSync(outputSiteDir, { recursive: true });
 
     /////////////////////////
     ///// Chapter one: chain data
@@ -50,6 +111,10 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
         }
     }
 
+    // Verify videos early
+    const blueRailroadMetadata = await verifyBlueRailroadVideos();
+    chainData.blueRailroads = blueRailroadMetadata;
+
     console.timeEnd("chain-data");
 
     //////////////////////////////////
@@ -68,7 +133,7 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
     //////
 
     // We'll need helpers....
-    registerHelpers();
+    registerHelpers(site);
 
     // ...and processed context...
     appendChainDataToShows(shows, chainData); // Mutates shows.
@@ -77,17 +142,20 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
         "shows": shows,
         'songsByProvenance': songsByProvenance,
         'latest_git_commit': execSync('git rev-parse HEAD').toString().trim(),
+        'chainData': chainData,
     };
 
-    // Copy client-side partials to the output directory
-    fs.cpSync(path.join(templateDir, 'client_partials'), path.join(outputPrimaryDir, 'client_partials'), { recursive: true });
+    if (site === "justinholmes.com") {
+        // Copy client-side partials to the output directory
+        fs.cpSync(path.join(templateDir, 'client_partials'), path.join(outputSiteDir, 'client_partials'), { recursive: true });
+    }
 
 
     ////////////////////
     // Chapter 3.2: Render one-off pages from YAML
     ///////////////////////
 
-    let pageyamlFile = fs.readFileSync("src/data/pages.yaml");
+    let pageyamlFile = fs.readFileSync(`src/data/${site}.pages.yaml`);
     let pageyaml = yaml.load(pageyamlFile);
 
     let contextFromPageSpecificFiles = {};
@@ -166,8 +234,8 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
             output_path: output_path,
             context: context,
             layout: pageInfo["base_template"],
-        }
-        );
+            site: site,
+        });
 
     });
 
@@ -178,37 +246,48 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
     /////////////////////////////////////////////
 
     // Render things that we'll need later.
-    generateSetStonePages(shows, path.resolve(outputPrimaryDir, 'setstones'));
-    renderSetStoneImages(shows, path.resolve(outputPrimaryDir, 'assets/images/setstones'));
+
+    if (site === "cryptograss.live") {
+        generateSetStonePages(shows, path.resolve(outputSiteDir, 'setstones'));
+    }
+
+
+    renderSetStoneImages(shows, path.resolve(outputSiteDir, 'assets/images/setstones'));
 
     //////////////////////
     // Chapter 4.1: Show pages
     ////////////////////
 
-    Object.entries(shows).forEach(([show_id, show]) => {
-        const page = `show_${show_id}`;
+    if (site === "justinholmes.com") { // TODO: This is a hack.  We need to make this more general.
 
-        let context = {
-            page_name: page,
-            page_title: show.title,
-            show,
-            imageMapping,
-            chainData,
-        };
+        Object.entries(shows).forEach(([show_id, show]) => {
+            const page = `show_${show_id}`;
 
-        renderPage({
-            template_path: 'reuse/single-show.njk',
-            output_path: `shows/${show_id}.html`,
-            context: context
-        }
-        );
+            let context = {
+                page_name: page,
+                page_title: show.title,
+                show,
+                imageMapping,
+                chainData,
+            };
 
-    });
+            renderPage({
+                template_path: 'reuse/single-show.njk',
+                output_path: `shows/${show_id}.html`,
+                context: context,
+                site: site,
+            }
+            );
 
+        });
+
+    }
 
     ///////////////////////////
     // Chapter 4.2: Song pages
     ///////////////////////////
+
+    if (site === "justinholmes.com") { // TODO: This is a hack.  We need to make this more general.
 
     Object.entries(songs).forEach(([song_slug, song]) => {
         const page = `song_${song_slug}`;
@@ -235,15 +314,20 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
         renderPage({
             template_path: 'reuse/single-song.njk',
             output_path: `songs/${song_slug}.html`,
-            context: context
+            context: context,
+            site: site,
         }
         );
 
     });
 
+    }
+
     ///////////////////////////
     // Chapter 4.2a: Lists of songs
     ///////////////////////////
+
+    if (site === "justinholmes.com") { // TODO: This is a hack.  We need to make this more general.
 
     // TODO: Not jazzed to do this here instead of just making this available in the context.
 
@@ -264,15 +348,19 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
     renderPage({
         template_path: 'pages/songs/songs-by-plays.njk',
         output_path: `songs/songs-by-plays.html`,
-        context: context
+        context: context,
+        site: site,
     }
     );
 
+    }
 
 
     ///////////////////////////
-    // Chapter 4.2: Musician pages
+    // Chapter 4.3: Musician pages
     ///////////////////////////
+
+    if (site === "justinholmes.com") { // TODO: This is a hack.  We need to make this more general.
 
     Object.entries(pickers).forEach(([picker, picker_data]) => {
 
@@ -306,12 +394,14 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
         renderPage({
             template_path: 'reuse/single-picker.njk',
             output_path: `pickers/${picker_slug}.html`,
-            context: context
+            context: context,
+            site: site,
         }
         );
 
     });
 
+    }
 
     ///////////////////////////
     // Chapter 5: Cleanup
@@ -324,4 +414,5 @@ export async function runPrimaryBuild(skip_chain_data_fetch=false) {
     });
 
     console.timeEnd('primary-build');
+    return outputSiteDir;
 }

@@ -4,7 +4,7 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { outputDistDir, outputPrimaryDir, srcDir, templateDir } from "./constants.js";
+import { outputjhcomDistDir, srcDir, templateDir } from "./constants.js";
 import { runPrimaryBuild } from './primary_builder.js';
 
 // Check if SKIP_CHAIN_DATA is set
@@ -45,6 +45,8 @@ const htmlPluginInstances = templateFiles.map(templatePath => {
         var chunks = ['main', 'setstone_color_palette'];
     } else if (relativePath.startsWith('cryptograss/tools/sign-things')) {
         var chunks = ['main', 'signing'];
+    } else if (relativePath.startsWith('blue-railroad-test')) {
+        var chunks = ['main', 'blue_railroad'];
     } else {
         var chunks = ['main'];
     }
@@ -59,7 +61,7 @@ const htmlPluginInstances = templateFiles.map(templatePath => {
 
 
 const common = {
-    output: { path: outputDistDir },
+    output: { path: outputjhcomDistDir },
     plugins: [
         // Copy the .htaccess.
         // Copy assets and such.
@@ -67,18 +69,28 @@ const common = {
             patterns: [
                 {
                     from: path.resolve(outputPrimaryDir, 'assets'),
-                    to: path.resolve(outputDistDir, 'assets')
+                    to: path.resolve(outputjhcomDistDir, 'assets')
                 },
                 {
                     from: path.resolve(outputPrimaryDir, 'setstones'),
-                    to: path.resolve(outputDistDir, 'setstones')
+                    to: path.resolve(outputjhcomDistDir, 'setstones')
                 },
 
                 // TODO: Design decision on client partials.
                 {
                     from: path.resolve(outputPrimaryDir, 'client_partials'),
-                    to: path.resolve(outputDistDir, 'partials')
-                }
+                    to: path.resolve(outputjhcomDistDir, 'partials')
+                },
+                {
+                    from: 'src/fetched_assets',
+                    to: 'assets',
+                    globOptions: {
+                        dot: true,
+                        gitignore: true,
+                        ignore: ['**/.gitkeep', '**/.DS_Store'],
+                    },
+                    noErrorOnMissing: true  // Won't error if directory is empty/missing
+                },
             ]
         }),
         new MiniCssExtractPlugin({
@@ -97,7 +109,8 @@ const common = {
         strike_set_stone: './src/js/cryptograss/bazaar/strike_set_stones.js',
         add_live_set: './src/js/cryptograss/tools/add_live_set.js',
         add_show_for_stone_minting: './src/js/cryptograss/tools/add_show_for_stone_minting.js',
-        shapes: './src/js/shapes.js'
+        shapes: './src/js/shapes.js',
+        blue_railroad: './src/js/cryptograss/bazaar/blue_railroad.js',
     },
     module: {
         rules: [

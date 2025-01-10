@@ -1,22 +1,3 @@
-import {fileURLToPath} from "url";
-import path from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-export const srcDir = path.resolve(__filename, '../..');
-export const projectRootDir = path.resolve(srcDir, '..');
-
-// Templates directories
-export const templateDir = path.resolve(srcDir, 'templates');
-export const pageBaseDir = path.resolve(templateDir, 'pages');
-
-// Data directories.
-export const dataDir = path.resolve(srcDir, 'data');
-export const showsDir = path.resolve(dataDir, 'shows');
-export const imagesSourceDir = path.join(srcDir, 'images');
-export const fetchedVideosDir = path.join(srcDir, 'fetched_videos');
-
-
-// Output directories
-export const outputBaseDir = path.resolve(projectRootDir, 'output');
-export const outputPrimaryDir = path.resolve(outputBaseDir, '_prebuild_output');
-export const outputDistDir = path.resolve(outputBaseDir, 'justinholmes.com.public.dist');
+export const setStoneContractAddress = "0x39269b3FddFc9bf0626e5CFe4424aa51A77f7678";
+export const blueRailroadContractAddress = "0xCe09A2d0d0BDE635722D8EF31901b430E651dB52";
+export const revealerContractAddress = '0xa812137EFf2B368d0B2880A39B609fB60c426850';

@@ -1,0 +1,22 @@
+{% extends "layouts/base.njk" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl mb-8">Deployed Contracts</h1>
+    
+    {% for chainId, contracts in manifest.contracts %}
+        <div class="mb-8">
+            <h2 class="text-2xl mb-4">Chain {{ chainId }}</h2>
+            
+            {% for name, contract in contracts %}
+                <div class="border p-4 rounded mb-4">
+                    <h3 class="text-xl mb-2">{{ name }}</h3>
+                    <p>Address: <code>{{ contract.address }}</code></p>
+                    <p>Deployed at block {{ contract.deploymentBlock }}</p>
+                    <a href="https://polygonscan.com/tx/{{ contract.deploymentTx }}">View on Explorer</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

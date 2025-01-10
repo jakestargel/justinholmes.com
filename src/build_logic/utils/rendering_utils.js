@@ -1,11 +1,11 @@
 import path from "path";
-import {outputPrimaryDir, templateDir} from "../constants.js";
 import fs from "fs";
 import nunjucks from "nunjucks";
+import { getProjectDirs } from "../locations.js";
 
-
-export function renderPage({template_path, context, output_path, layout = "base.njk"}) {
-    const outputFilePath = path.join(outputPrimaryDir, output_path);
+export function renderPage({ template_path, context, output_path, layout = "base.njk", site }) {
+    const { outputPrimaryRootDir, templateDir } = getProjectDirs();
+    const outputFilePath = path.join(outputPrimaryRootDir, site, output_path);
 
     if (!fs.existsSync(outputFilePath)) {
         fs.mkdirSync(path.dirname(outputFilePath), {recursive: true});

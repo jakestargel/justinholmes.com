@@ -1,0 +1,20 @@
+{% extends 'shared/layouts/base.njk' %}
+{% block main %}
+{% include 'partials/bigger-banner.njk' %}
+
+
+<div id="content" class="container text-light">
+    <dv class="accordion col-md-8 center">
+        {% for provenance, songs in songsByProvenance %}<br/>
+        <h1>{{provenance}}</h1>
+        {% for song in songs %}
+        <br/>
+        {{ song.slug }}
+        <br/>
+        {% include 'partials/song-summary.njk' %}
+        <hr/>
+        {% endfor %}
+        {% endfor %}
+    </dv>
+</div>
+{% endblock %}

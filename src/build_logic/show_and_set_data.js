@@ -8,8 +8,15 @@ import {slugify} from "./utils/text_utils.js";
 import {deserializeTimeData} from "./chaindata_db.js";
 
 import {DateTime} from 'luxon';
-import {dataDir, imagesSourceDir, showsDir} from "./constants.js";
+import { getProjectDirs } from "./locations.js";
 
+
+
+let songAndSetData = null;
+
+export function processShowAndSetData() {
+
+    const { dataDir, imagesSourceDir, showsDir } = getProjectDirs();
 
 // Log the time.
 console.time("show-and-song-data");
@@ -290,7 +297,7 @@ for (let i = 0; i < liveShowYAMLs.length; i++) {
             if (songPlay._set._show.hasOwnProperty("has_set_stones_available")) {
                 console.log("llamas");
             }
-            //
+            // TODO: What's going on here?
             // if (set.hasOwnProperty('setstones')) {
             //     songPlay['set_stones'] = set['set_stones'];
             // }
@@ -585,4 +592,14 @@ shows = Object.fromEntries(Object.entries(shows).sort(function (a, b) {
     return parseInt(b[0].split('-')[1]) - parseInt(a[0].split('-')[1]);
 }));
 
-export {shows, songs, pickers, songsByVideoGame, songsByProvenance};
+    return { shows, songs, pickers, songsByVideoGame, songsByProvenance };
+
+}
+
+export function getShowAndSetData() {
+    if (songAndSetData === null) {
+        songAndSetData = processShowAndSetData();
+    }
+    return songAndSetData;
+}
+
