@@ -3,10 +3,11 @@ import path from 'path';
 import ora from 'ora';
 import cliProgress from 'cli-progress';
 import { downloadVideos } from './discord_video_fetcher.js';
-import { fetchedAssetsDir } from './constants.js';
-import { blueRailroadContractAddress } from 'js/constants.js';
+import { getProjectDirs } from './locations.js';
+import { blueRailroadContractAddress } from './constants.js';
 
 async function main() {
+    const { fetchedAssetsDir } = getProjectDirs();
     const spinner = ora('Reading metadata').start();
 
     try {
