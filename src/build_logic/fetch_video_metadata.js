@@ -1,6 +1,6 @@
 import { generateVideoMetadata } from './discord_video_fetcher.js';
-import { fetchedAssetsDir } from './constants.js';
-import { blueRailroadContractAddress } from 'js/constants.js';
+import { blueRailroadContractAddress } from './constants.js';
+import { getProjectDirs } from './locations.js';
 import { createConfig, http } from '@wagmi/core';
 import { mainnet, optimism } from '@wagmi/core/chains';
 import fs from 'fs';
@@ -12,6 +12,7 @@ import { getBlueRailroads } from './chain_reading.js';
 dotenv.config();
 
 async function getBlueRailroadMetadata() {
+    const { fetchedAssetsDir } = getProjectDirs();
     const spinner = ora('Reading Blue Railroad contract data').start();
 
     try {

@@ -43,8 +43,7 @@ export async function downloadVideos(metadataList, outputDir) {
     }
 }
 
-export async function fetchDiscordVideos(messageUrls) {
-    const { fetchedAssetsDir } = getProjectDirs();
+export async function generateVideoMetadata(messageUrls) {
     const client = new Client({
         intents: [
             GatewayIntentBits.MessageContent,
@@ -55,60 +54,40 @@ export async function fetchDiscordVideos(messageUrls) {
 
     try {
         await client.login(process.env.DISCORD_BOT_TOKEN);
-
-        const videos = [];
+        const metadata = [];
 
         for (const url of messageUrls) {
             const { channelId, messageId } = parseDiscordUrl(url);
             const videoFileName = `${messageId}.mp4`;
-            const videoPath = path.join(fetchedAssetsDir, videoFileName);
 
-            // Check if we already have this video
-            if (fs.existsSync(videoPath)) {
-                videos.push({
-                    originalUrl: url,
-                    localPath: videoPath,
-                    fileName: videoFileName
-                });
-                continue;
-            }
             let message;
             let videoAttachment;
 
             try {
                 const channel = await client.channels.fetch(channelId);
                 message = await channel.messages.fetch(messageId);
-
                 videoAttachment = message.attachments.find(
                     attachment => attachment.contentType?.startsWith('video/')
                 );
 
-            } catch (messageError) {
-                console.warn(`Failed to fetch message from ${url}:`, messageError);
-                continue;
-            }
-            try {
                 if (videoAttachment) {
-                    await downloadVideo(videoAttachment.url, videoPath);
-                    videos.push({
+                    metadata.push({
                         originalUrl: url,
-                        localPath: videoPath,
+                        discordUrl: videoAttachment.url,
                         fileName: videoFileName,
-                        timestamp: message.createdTimestamp
+                        timestamp: message.createdTimestamp,
+                        contentType: videoAttachment.contentType
                     });
-                } else {
-                    console.warn(`No video found in message ${url}`);
-                    continue;
                 }
-            } catch (messageError) {
-                console.warn(`Found message, but had problems fetching video from ${url}:`, messageError);
+            } catch (error) {
+                console.warn(`Failed to fetch message from ${url}:`, error);
             }
         }
 
         await client.destroy();
-        return videos;
+        return metadata;
     } catch (error) {
-        console.error('Error fetching Discord videos:', error);
+        console.error('Error fetching Discord video metadata:', error);
         throw error;
     }
 }
