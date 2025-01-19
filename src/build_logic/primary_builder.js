@@ -90,13 +90,9 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
     /////////////////////////
     ///// Chapter one: chain data
     ////////////////////////////
-    console.time("chain-data");
-    if (skip_chain_data_fetch) {
-        console.log("Skipping chain data retrieval.");
-    } else {
-        const fetchedchainData = await fetch_chaindata(shows);
-        serializeChainData(fetchedchainData);
-    }
+
+    // Note: We're not fetching chain data here.  We're just deserializing it.
+    // To build chain data, run `npm run fetch-chain-data`.
 
     let chainData
 
@@ -105,7 +101,7 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
     } catch (e) {
         // If the error is that the directory wasn't found, make a suggestion.
         if (e.code === 'ENOENT' && skip_chain_data_fetch) {
-            throw new Error("Chain data not found, and you're running with 'skip_chain_data_fetch'. You probably need to fetch chain data.");
+            throw new Error("Chain data not found. You probably need to fetch chain data with `npm run fetch-chain-data`.");
         } else {
             throw e;
         }
