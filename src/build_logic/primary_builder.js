@@ -24,7 +24,7 @@ import { appendChainDataToShows } from './chain_reading.js';
 import { generateSetStonePages, renderSetStoneImages } from './setstone_utils.js';
 import { verifyBlueRailroadVideos } from './blue_railroad.js';
 
-export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
+export const runPrimaryBuild = async (site) => {
     const { outputPrimaryRootDir, dataDir, templateDir } = getProjectDirs();
     const { shows, songs, pickers, songsByProvenance } = getShowAndSetData();
 
@@ -68,7 +68,7 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
         chainData = deserializeChainData();
     } catch (e) {
         // If the error is that the directory wasn't found, make a suggestion.
-        if (e.code === 'ENOENT' && skip_chain_data_fetch) {
+        if (e.code === 'ENOENT') {
             throw new Error("Chain data not found. You probably need to fetch chain data with `npm run fetch-chain-data`.");
         } else {
             throw e;
