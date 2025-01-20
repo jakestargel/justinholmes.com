@@ -1,61 +1,28 @@
+// Node.js built-ins
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+
+// External packages
+import yaml from 'js-yaml';
+import { marked } from 'marked';
+import nunjucks from "nunjucks";
+
+// Local utilities and helpers
 import { getProjectDirs } from "./locations.js";
 import { slugify } from "./utils/text_utils.js";
 import { renderPage } from "./utils/rendering_utils.js";
-import fs from 'fs';
-import yaml from 'js-yaml';
-import path from 'path'; ``
-import { getShowAndSetData } from "./show_and_set_data.js";
-import { marked } from 'marked';
-import { gatherAssets, unusedImages, imageMapping } from './asset_builder.js';
-import { deserializeChainData, serializeChainData } from './chaindata_db.js';
-import { execSync } from 'child_process';
-import { generateSetStonePages, renderSetStoneImages } from './setstone_utils.js';
 import { registerHelpers } from './utils/template_helpers.js';
-import { appendChainDataToShows, fetch_chaindata } from './chain_reading.js';
-import nunjucks from "nunjucks";
-import { blueRailroadContractAddress } from './constants.js';
 
-async function verifyBlueRailroadVideos() {
-    const { fetchedAssetsDir } = getProjectDirs();
-    const { shows, songs, pickers } = getShowAndSetData();
-    const chainId = '10';
-    const metadataPath = path.join(fetchedAssetsDir, `${chainId}-${blueRailroadContractAddress}.json`);
+// Data and asset management
+import { getShowAndSetData } from "./show_and_set_data.js";
+import { gatherAssets, unusedImages, imageMapping } from './asset_builder.js';
+import { deserializeChainData } from './chaindata_db.js';
+import { appendChainDataToShows } from './chain_reading.js';
 
-    if (!fs.existsSync(metadataPath)) {
-        throw new Error(
-            'Blue Railroad metadata not found! Please run:\n' +
-            'npm run fetch-video-metadata\n' +
-            'npm run download-videos'
-        );
-    }
-
-    const metadata = JSON.parse(fs.readFileSync(metadataPath));
-    const missingVideos = [];
-
-    for (const [tokenId, data] of Object.entries(metadata)) {
-        if (!data.video_url) continue; // Skip entries without videos
-
-        const expectedVideoPath = path.join(
-            fetchedAssetsDir,
-            `${chainId}-${blueRailroadContractAddress}-${tokenId}.mp4`
-        );
-
-        if (!fs.existsSync(expectedVideoPath)) {
-            missingVideos.push(tokenId);
-        }
-    }
-
-    if (missingVideos.length > 0) {
-        throw new Error(
-            `Missing videos for tokens: ${missingVideos.join(', ')}\n` +
-            'Please run: npm run download-videos'
-        );
-    }
-
-    // Sort by latest first.
-    return Object.entries(metadata).reverse()
-}
-
+// Feature-specific modules
+import { generateSetStonePages, renderSetStoneImages } from './setstone_utils.js';
+import { verifyBlueRailroadVideos } from './blue_railroad.js';
 
 export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
     const { outputPrimaryRootDir, dataDir, templateDir } = getProjectDirs();
