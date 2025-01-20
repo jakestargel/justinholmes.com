@@ -94,7 +94,8 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
     // Note: We're not fetching chain data here.  We're just deserializing it.
     // To build chain data, run `npm run fetch-chain-data`.
 
-    let chainData
+    console.time('chain-data');
+    let chainData;
 
     try {
         chainData = deserializeChainData();
@@ -122,7 +123,7 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
     ////////////////////////////////////////////////
     ///// Chapter three: One-off Pages
     /////////////////////////////////////////////
-    console.time('pages-yaml-read');
+    console.time('One Off Pages');
 
     ////////
     /// Chapter 3.1: Register helpers, partials, and context
@@ -141,7 +142,7 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
         'chainData': chainData,
     };
 
-    if (site === "justinholmes.com") {
+    if (site === "justinholmes.com") { // TODO: Make this more general
         // Copy client-side partials to the output directory
         fs.cpSync(path.join(templateDir, 'client_partials'), path.join(outputSiteDir, 'client_partials'), { recursive: true });
     }
@@ -296,7 +297,7 @@ export const runPrimaryBuild = async (skip_chain_data_fetch, site) => {
             chainData,
         };
 
-        // See if we have a MD file with long-form description.
+        // See if we have a MD file with long-form commentary for the song.
         let commentary;
         const commentary_path = path.resolve(dataDir, `songs_and_tunes/${song_slug}.md`);
         if (fs.existsSync(commentary_path)) {
