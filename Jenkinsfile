@@ -53,6 +53,17 @@ pipeline {
             }
         }
         
+        stage('Fetch Video Metadata') {
+            steps {
+                sh '''
+                    export NVM_DIR="$NVM_DIR"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use ${NODE_VERSION}
+                    npm run fetch-video-metadata
+                '''
+            }
+        }
+
         stage('Download Assets') {
             steps {
                 sh '''
