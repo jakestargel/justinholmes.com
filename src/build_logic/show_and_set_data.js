@@ -377,7 +377,7 @@ for (const songPlay of allSongPlays) {
             // The artist ID of the song is the same of the artist ID of the show.
             // Thus, this is an original.
             songPlay['provenance'] = 'original';
-            songsByProvenance['original'].push(song); // TODO: This is weird - what if someone else is playing it?  Forward-incompatible with other artists.
+            songsByProvenance['original'].push(song);
         } else {
             // This is a cover of another cryptograss artist!  Awesome.
             // TODO: Someday we'll handle this.  But for now, we'll throw an error.

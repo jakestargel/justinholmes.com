@@ -378,5 +378,5 @@ export const runPrimaryBuild = async () => {
     });
 
     console.timeEnd('primary-build');
-    return outputSiteDir;
+    return true; // TODO: Return something useful.
 }
