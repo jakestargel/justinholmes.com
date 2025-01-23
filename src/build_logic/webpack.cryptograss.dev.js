@@ -26,7 +26,7 @@ const devExport = merge(common, {
             publicPath: '/assets',
         }],
         devMiddleware: {
-            writeToDisk: true,  // Add this to help debug
+            writeToDisk: true,
         }
     },
     mode: 'development',
