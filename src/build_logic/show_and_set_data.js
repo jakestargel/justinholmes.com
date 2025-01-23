@@ -24,6 +24,11 @@ export function processShowAndSetData() {
     Chart.register(...registerables);
     Chart.defaults.color = '#fff';
 
+    const testCanvas = createCanvas(100, 100);
+    const testCtx = testCanvas.getContext('2d');
+    testCtx.fillStyle = 'rgb(255, 0, 0)';  // Pure red
+    testCtx.fillRect(0, 0, 100, 100);
+    fs.writeFileSync('/home/jmyles/test-color.jpg', testCanvas.toBuffer('image/jpeg'));
 
     // Make a 'graphs' directory in the images directory.
     const graphsDir = path.join(imagesSourceDir, 'graphs');
@@ -235,7 +240,7 @@ export function processShowAndSetData() {
                                 throw new Error("Unknown performance modification: " + songEntry[key]);
                             }
                         } else if (key === "ensemble-modifications") {
-                    // TODO: Same - does this belong in a parsing loop?
+                            // TODO: Same - does this belong in a parsing loop?
 
                             const modifications = songEntry[key]
 
@@ -248,7 +253,7 @@ export function processShowAndSetData() {
                                     const vocalist = detail;
                                     songPlay["detail"] = `(${vocalist} Lead Vocal)`;
                                 } else if (modification === "featuring") {
-                            // TODO: What if this piece has multiple modifications?
+                                    // TODO: What if this piece has multiple modifications?
 
                                     songPlay["detail"] = "(feat. ";
                                     for (let featured_artist of detail) {
