@@ -19,13 +19,46 @@ export async function generateProductionConfig() {
         throw new Error('Invalid site argument');
     }
 
-    const { templateDir, outputDistDir } = getProjectDirs();
+    const { templateDir, outputDistDir, siteDir } = getProjectDirs();
+    const frontendJSDir = path.resolve(siteDir, 'js');
 
     return merge(common['default'], {
         mode: 'production',
         devtool: false,
         optimization: {
-            minimizer: [new TerserPlugin()],
+            minimize: true,
+            minimizer: [new TerserPlugin({
+                parallel: true,
+                terserOptions: {
+                    // Reduce memory usage
+                    compress: {
+                        passes: 1
+                    },
+                    mangle: true
+                }
+            })],
+            splitChunks: {
+                chunks: 'all',
+                maxInitialRequests: 30,
+                minSize: 20000,
+                maxSize: 244000,
+                cacheGroups: {
+                    defaultVendors: {
+                        test: /[\\/]node_modules[\\/]/,
+                        priority: -10,
+                        reuseExistingChunk: true,
+                    },
+                    default: {
+                        minChunks: 2,
+                        priority: -20,
+                        reuseExistingChunk: true,
+                    }
+                }
+            }
+        },
+        // Increase memory limit for Node
+        performance: {
+            hints: false
         },
         plugins: [
             new webpack.DefinePlugin({
@@ -39,21 +72,9 @@ export async function generateProductionConfig() {
                         const sourcePath = path.resolve(templateDir, 'shared/.htaccess');
                         const destPath = path.resolve(outputDistDir, '.htaccess');
 
-                        console.log('Source path:', sourcePath);
-                        console.log('Destination path:', destPath);
-                        console.log('Source exists?', fs.existsSync(sourcePath));
-                        console.log('Source directory contents:', fs.readdirSync(path.dirname(sourcePath)));
-
-                        try {
-                            fs.copyFileSync(sourcePath, destPath);
-                            console.log('.htaccess file copied successfully');
-                        } catch (error) {
-                            console.error('Error copying .htaccess:', error);
-                            console.log('Current working directory:', process.cwd());
-                            console.log('templateDir:', templateDir);
-                            console.log('outputDistDir:', outputDistDir);
-                            throw error; // Re-throw to fail the build
-                        }
+                        console.log('Frontend JS dir:', frontendJSDir);
+                        console.log('Frontend JS dir contents:', fs.readdirSync(frontendJSDir));
+                        fs.copyFileSync(sourcePath, destPath);
                     });
                 },
             },

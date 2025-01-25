@@ -7,7 +7,6 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { runPrimaryBuild } from './primary_builder.js';
 
 const { outputPrimarySiteDir, outputPrimaryRootDir, outputDistDir, siteDir, srcDir } = getProjectDirs();
 
