@@ -34,11 +34,26 @@ export async function generateProductionConfig() {
             {
                 apply: (compiler) => {
                     compiler.hooks.done.tap('CopyHtaccessPlugin', () => {
-                        fs.copyFileSync(
-                            path.resolve(templateDir, 'shared/.htaccess'),
-                            path.resolve(outputDistDir, '.htaccess')
-                        );
-                        console.log('.htaccess files copied');
+                        // Debug logging
+                        console.log('Attempting to copy .htaccess');
+                        const sourcePath = path.resolve(templateDir, 'shared/.htaccess');
+                        const destPath = path.resolve(outputDistDir, '.htaccess');
+
+                        console.log('Source path:', sourcePath);
+                        console.log('Destination path:', destPath);
+                        console.log('Source exists?', fs.existsSync(sourcePath));
+                        console.log('Source directory contents:', fs.readdirSync(path.dirname(sourcePath)));
+
+                        try {
+                            fs.copyFileSync(sourcePath, destPath);
+                            console.log('.htaccess file copied successfully');
+                        } catch (error) {
+                            console.error('Error copying .htaccess:', error);
+                            console.log('Current working directory:', process.cwd());
+                            console.log('templateDir:', templateDir);
+                            console.log('outputDistDir:', outputDistDir);
+                            throw error; // Re-throw to fail the build
+                        }
                     });
                 },
             },
