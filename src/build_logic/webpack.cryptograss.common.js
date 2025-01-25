@@ -11,6 +11,9 @@ import { runPrimaryBuild } from './primary_builder.js';
 
 const { outputPrimarySiteDir, outputPrimaryRootDir, outputDistDir, siteDir, srcDir } = getProjectDirs();
 
+// Make sure the output directory exists
+fs.mkdirSync(outputDistDir, { recursive: true });
+
 const templatesPattern = path.join(outputPrimarySiteDir, '**/*.html');
 const templateFiles = glob.sync(templatesPattern);
 

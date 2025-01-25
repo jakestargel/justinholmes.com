@@ -12,6 +12,9 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 const { outputDistDir, outputPrimaryRootDir, outputPrimarySiteDir, siteDir, site, srcDir } = getProjectDirs();
 
+// Make sure the output directory exists
+fs.mkdirSync(outputDistDir, { recursive: true });
+
 const templatesPattern = path.join(outputPrimarySiteDir, '**/*.html');
 const templateFiles = glob.sync(templatesPattern);
 
