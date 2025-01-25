@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        NODE_VERSION = '23.2.0'
+        NODE_VERSION = '23.6.1'
         NVM_DIR = '/var/jenkins_home/.nvm'
         ALCHEMY_API_KEY = credentials('ALCHEMY_API_KEY')
         DISCORD_BOT_TOKEN = credentials('DISCORD_BOT_TOKEN')
