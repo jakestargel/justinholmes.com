@@ -51,7 +51,8 @@ pipeline {
                 '''
             }
         }
-        stage('Parallel Stage') {
+
+        stage('Tests and Fetches') {
             parallel {
                 stage('Run Tests') {
                     steps {
@@ -86,17 +87,21 @@ pipeline {
                     }
                 }
 
-                stage('Download Blue Railroad Videos') {
-                    steps {
-                        sh '''
-                            export NVM_DIR="$NVM_DIR"
-                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                            nvm use ${NODE_VERSION}
-                            npm run download-videos
-                        '''
-                    }
+            }
+        }
+
+            stage('Download Blue Railroad Videos') {
+                steps {
+                    sh '''
+                        export NVM_DIR="$NVM_DIR"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                        nvm use ${NODE_VERSION}
+                        npm run download-videos
+                    '''
                 }
             }
+
+        stage("Build") {
 
             parallel {
                     
@@ -125,6 +130,7 @@ pipeline {
                 }
             }
         }
+    
 
 
         stage('Deploy') {
