@@ -4,13 +4,14 @@ import webpack from 'webpack';
 import { getProjectDirs } from './locations.js'
 import fs from "fs";
 import path from "path";
+import { runPrimaryBuild } from './primary_builder.js';
 
 // Dynamically import the common webpack config for the project, depending on the site argument
 const site = process.env.SITE;
 
 export async function generateProductionConfig() {
-    let common;
 
+    let common;
     if (site === 'justinholmes.com') {
         common = await import('./webpack.justinholmes.common.js');
     } else if (site === 'cryptograss.live') {
@@ -18,6 +19,9 @@ export async function generateProductionConfig() {
     } else {
         throw new Error('Invalid site argument');
     }
+
+    await runPrimaryBuild();
+
 
     const { templateDir, outputDistDir, siteDir } = getProjectDirs();
     const frontendJSDir = path.resolve(siteDir, 'js');

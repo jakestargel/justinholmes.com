@@ -13,7 +13,7 @@ pipeline {
     }
     
     stages {
-        stage('Setup NVM') {
+        stage('Setup Environment') {
             steps {
                 sh '''
                     # Install NVM if not present
@@ -26,7 +26,7 @@ pipeline {
             }
         }
         
-        stage('Setup Node') {
+        stage('Setup NodeJS ${NODE_VERSION}') {
             steps {
                 sh '''
                     export NVM_DIR="$NVM_DIR"
@@ -62,7 +62,7 @@ pipeline {
             }
         }
         
-        stage('Fetch Video Metadata') {
+        stage('Fetch Blue Railroads Metadata') {
             steps {
                 sh '''
                     export NVM_DIR="$NVM_DIR"
@@ -73,7 +73,7 @@ pipeline {
             }
         }
 
-        stage('Download Assets') {
+        stage('Download Blue Railroad Videos') {
             steps {
                 sh '''
                     export NVM_DIR="$NVM_DIR"
