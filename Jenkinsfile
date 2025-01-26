@@ -61,6 +61,17 @@ pipeline {
                 '''
             }
         }
+
+        stage("Fetch Chain Data") {
+            steps {
+                sh '''
+                    export NVM_DIR="$NVM_DIR"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    nvm use ${NODE_VERSION}
+                    npm run fetch-chain-data
+                '''
+            }
+        }
         
         stage('Fetch Blue Railroads Metadata') {
             steps {
