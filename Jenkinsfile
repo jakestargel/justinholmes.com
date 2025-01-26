@@ -96,7 +96,10 @@ pipeline {
                         '''
                     }
                 }
-                
+            }
+
+            parallel {
+                    
                 stage('Build cryptograss.live') {
                     steps {
                         sh '''
@@ -122,6 +125,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Deploy') {
             steps {
