@@ -3,6 +3,7 @@ pipeline {
     
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
+        parallelsAlwaysFailFast();
     }
 
     environment {
@@ -50,75 +51,78 @@ pipeline {
                 '''
             }
         }
-        
-        stage('Run Tests') {
-            steps {
-                sh '''
+        stage('Parallel Stage') {
+            parallel {
+                stage('Run Tests') {
+                    steps {
+                        sh '''
                     export NVM_DIR="$NVM_DIR"
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     nvm use ${NODE_VERSION}
                     npm test
                 '''
+                    }
+                }
+
+                stage("Fetch Chain Data") {
+                    steps {
+                        sh '''
+                            export NVM_DIR="$NVM_DIR"
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                            nvm use ${NODE_VERSION}
+                            npm run fetch-chain-data
+                        '''
+                    }
+                }
+                
+                stage('Fetch Blue Railroads Metadata') {
+                    steps {
+                        sh '''
+                            export NVM_DIR="$NVM_DIR"
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                            nvm use ${NODE_VERSION}
+                            npm run fetch-video-metadata
+                        '''
+                    }
+                }
+
+                stage('Download Blue Railroad Videos') {
+                    steps {
+                        sh '''
+                            export NVM_DIR="$NVM_DIR"
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                            nvm use ${NODE_VERSION}
+                            npm run download-videos
+                        '''
+                    }
+                }
+                
+                stage('Build cryptograss.live') {
+                    steps {
+                        sh '''
+                            export NVM_DIR="$NVM_DIR"
+                            export SITE=cryptograss.live
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                            nvm use ${NODE_VERSION}
+                            npm run build
+                        '''
+                    }
+                }
+
+                stage('Build justinholmes.com') {
+                    steps {
+                        sh '''
+                            export NVM_DIR="$NVM_DIR"
+                            export SITE=justinholmes.com
+                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                            nvm use ${NODE_VERSION}
+                            npm run build
+                        '''
+                    }
+                }
             }
         }
 
-        stage("Fetch Chain Data") {
-            steps {
-                sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
-                    npm run fetch-chain-data
-                '''
-            }
-        }
-        
-        stage('Fetch Blue Railroads Metadata') {
-            steps {
-                sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
-                    npm run fetch-video-metadata
-                '''
-            }
-        }
-
-        stage('Download Blue Railroad Videos') {
-            steps {
-                sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
-                    npm run download-videos
-                '''
-            }
-        }
-        
-        stage('Build cryptograss.live') {
-            steps {
-                sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    export SITE=cryptograss.live
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
-                    npm run build
-                '''
-            }
-        }
-
-        stage('Build justinholmes.com') {
-            steps {
-                sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    export SITE=justinholmes.com
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
-                    npm run build
-                '''
-            }
-        }
-        
         stage('Deploy') {
             steps {
                 sh '''
