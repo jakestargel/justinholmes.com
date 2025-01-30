@@ -11,6 +11,7 @@ pipeline {
         NVM_DIR = '/var/jenkins_home/.nvm'
         ALCHEMY_API_KEY = credentials('ALCHEMY_API_KEY')
         DISCORD_BOT_TOKEN = credentials('DISCORD_BOT_TOKEN')
+        GITHUB_TOKEN = credentials('github-token')
     }
     
     stages {
@@ -23,6 +24,9 @@ pipeline {
                         export NVM_DIR="$NVM_DIR"
                         [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     fi
+                    
+                    # Configure git to use token for API calls
+                    git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
                 '''
             }
         }

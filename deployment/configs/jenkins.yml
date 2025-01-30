@@ -1,0 +1,76 @@
+jenkins:
+  systemMessage: "Cryptograss Jenkins Instance"
+  numExecutors: 2
+  scmCheckoutRetryCount: 2
+  mode: NORMAL
+  
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: ${JENKINS_ADMIN_PASSWORD}
+
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+
+  nodes:
+    - permanent:
+        name: "built-in"
+        remoteFS: "/var/jenkins_home"
+        numExecutors: 2
+
+jobs:
+  - script: >
+      multibranchPipelineJob('cryptograss-builder') {
+        branchSources {
+          github {
+            id('cryptograss-repo')
+            scanCredentialsId('github-token')
+            repoOwner('cryptograss')
+            repository('justinholmes.com')
+            buildOriginBranch(true)
+            buildOriginPRMerge(true)
+          }
+        }
+        configure { node ->
+          def traits = node / sources / data / 'jenkins.branch.BranchSource' / source / traits
+          traits << 'org.jenkinsci.plugins.github__branch__source.BranchDiscoveryTrait' {
+            strategyId(1)
+          }
+          traits << 'org.jenkinsci.plugins.github__branch__source.OriginPullRequestDiscoveryTrait' {
+            strategyId(1)
+          }
+        }
+        triggers {
+          periodicFolderTrigger {
+            interval('2m')
+          }
+        }
+        factory {
+          workflowBranchProjectFactory {
+            scriptPath('Jenkinsfile')
+          }
+        }
+      }
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - string:
+              scope: GLOBAL
+              id: "github-token"
+              secret: ${GITHUB_TOKEN}
+              description: "GitHub access token for public repo access"
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: "jenkins-ssh-key"
+              username: "jenkins"
+              privateKeySource:
+                directEntry:
+                  privateKey: ${JENKINS_SSH_KEY}
+              description: "SSH key for rsync deployments"
