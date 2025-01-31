@@ -33,6 +33,9 @@ RUN jenkins-plugin-cli --plugins \
     job-dsl \
     workflow-job \
     pipeline-model-definition \
+    pipeline-stage-view \
+    pipeline-graph-view \
+    dark-theme \
     github-branch-source
 
 # Create directory for Configuration as Code

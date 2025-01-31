@@ -24,48 +24,19 @@ jenkins:
         numExecutors: 2
 
 jobs:
-  - script: >
-      multibranchPipelineJob('cryptograss-builder') {
-        branchSources {
-          github {
-            id('cryptograss-repo')
-            scanCredentialsId('github-token')
-            repoOwner('cryptograss')
-            repository('justinholmes.com')
-            buildOriginBranch(true)
-            buildOriginPRMerge(true)
-          }
-        }
-        configure { node ->
-          def traits = node / sources / data / 'jenkins.branch.BranchSource' / source / traits
-          traits << 'org.jenkinsci.plugins.github__branch__source.BranchDiscoveryTrait' {
-            strategyId(1)
-          }
-          traits << 'org.jenkinsci.plugins.github__branch__source.OriginPullRequestDiscoveryTrait' {
-            strategyId(1)
-          }
-        }
-        triggers {
-          periodicFolderTrigger {
-            interval('2m')
-          }
-        }
-        factory {
-          workflowBranchProjectFactory {
-            scriptPath('Jenkinsfile')
-          }
-        }
-      }
+  - file: /var/jenkins_home/jobs/production.groovy
+  - file: /var/jenkins_home/jobs/pull-requests.groovy
 
 credentials:
   system:
     domainCredentials:
       - credentials:
-          - string:
+          - usernamePassword:
               scope: GLOBAL
               id: "github-token"
-              secret: ${GITHUB_TOKEN}
-              description: "GitHub access token for public repo access"
+              username: "jmyles"
+              password: "${GITHUB_TOKEN}"
+              description: "GitHub Token"
           - basicSSHUserPrivateKey:
               scope: GLOBAL
               id: "jenkins-ssh-key"
