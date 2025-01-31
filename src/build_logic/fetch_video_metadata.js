@@ -16,7 +16,7 @@ async function getBlueRailroadMetadata() {
     let apiKey = process.env.ALCHEMY_API_KEY;
     let apiUri;
     // Bail if the API key is not set.
-    if (apiKey) {
+    if (apiKey && apiKey !== "") {
         apiUri = `https://opt-mainnet.g.alchemy.com/v2/${apiKey}`;
     } else {
         throw new Error('The API key is not set in the environment variables.');
