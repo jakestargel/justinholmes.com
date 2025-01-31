@@ -10,6 +10,8 @@ pipeline {
         NODE_VERSION = '23.6.1'
         NVM_DIR = '/var/jenkins_home/.nvm'
         SECRETS_DIR = '/var/jenkins_home/secrets'
+        PR_BUILDS_DIR = '/var/www/builds'
+        COMMIT_SHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     }
     
     stages {
@@ -138,10 +140,37 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh '''
-                    rsync -av output/justinholmes.com.public.dist/ /var/www/justinholmes.com/
-                    rsync -av output/cryptograss.live.public.dist/ /var/www/cryptograss.live/
-                '''
+                script {
+                    // Check if this is a PR build
+                    def isPR = env.CHANGE_ID != null
+                    
+                    if (isPR) {
+                        // Deploy to PR builds directory
+                        sh """
+                            # Create commit-specific directory
+                            mkdir -p ${PR_BUILDS_DIR}/${COMMIT_SHA}
+                            
+                            # Deploy both sites to the PR build directory
+                            rsync -av output/justinholmes.com.public.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/justinholmes.com/
+                            rsync -av output/cryptograss.live.public.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/cryptograss.live/
+                            
+                            # Add a simple index page to list both sites
+                            echo '<html><body>
+                                <h1>PR Build for ${COMMIT_SHA}</h1>
+                                <ul>
+                                    <li><a href="justinholmes.com">justinholmes.com</a></li>
+                                    <li><a href="cryptograss.live">cryptograss.live</a></li>
+                                </ul>
+                            </body></html>' > ${PR_BUILDS_DIR}/${COMMIT_SHA}/index.html
+                        """
+                    } else {
+                        // Production deployment
+                        sh '''
+                            rsync -av output/justinholmes.com.public.dist/ /var/www/justinholmes.com/
+                            rsync -av output/cryptograss.live.public.dist/ /var/www/cryptograss.live/
+                        '''
+                    }
+                }
             }
         }
     }

@@ -220,6 +220,14 @@
         owner: 1000
         group: 1000
 
+    - name: Create PR builds directory
+      file:
+        path: "/var/www/builds"
+        state: directory
+        mode: '0755'
+        owner: www-data
+        group: www-data
+
   handlers:
     - name: Restart Nginx
       service:

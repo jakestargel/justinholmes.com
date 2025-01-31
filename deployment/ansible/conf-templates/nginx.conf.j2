@@ -13,6 +13,13 @@ server {
     # HSTS (uncomment if you're sure)
     # add_header Strict-Transport-Security "max-age=63072000" always;
 
+    # PR builds location
+    location /builds/ {
+        alias {{ jenkins_home }}/www/builds/;
+        autoindex on;  # Optional: enables directory listing
+        try_files $uri $uri/ /index.html;
+    }
+
     location / {
         proxy_pass http://localhost:{{ jenkins_port }};
         proxy_set_header Host $host;
