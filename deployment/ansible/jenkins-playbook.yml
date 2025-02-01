@@ -10,7 +10,7 @@
     node_version: "23.6.0"
     ssl_cert_path: "/etc/nginx/ssl/cert.pem"
     ssl_key_path: "/etc/nginx/ssl/key.pem"
-    domain_name: "builder.cryptograss.live"
+    domain_name: "maybelle.cryptograss.live"
     github_repo_url: "https://github.com/cryptograss/justinholmes.com" # TODO: make this dynamic?  Certainly it will change with the repo rename.
     secrets_dir: "{{ playbook_dir }}/../../secrets"
     jenkins_home: "/var/jenkins_home"

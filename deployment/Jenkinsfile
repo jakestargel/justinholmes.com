@@ -173,10 +173,7 @@ pipeline {
                             node deployment/scripts/modify_build_htmls.js
                         """
                         }
-                        def previewUrls = """
-                            🔍 Preview URLs for PR #${env.CHANGE_ID}:
-                            • https://builder.cryptograss.live/build-previews/${COMMIT_SHA}
-                            """
+                        def previewUrls = """🔍 [Preview URLs for PR #${env.CHANGE_ID}](https://maybelle.cryptograss.live/build-previews/${COMMIT_SHA})"""
                             
                         // Post comment on GitHub PR
                         pullRequest.comment(previewUrls)
@@ -186,7 +183,7 @@ pipeline {
                             status: 'success',
                             context: 'Preview Deployment',
                             description: 'Preview builds are ready',
-                            targetUrl: "https://builder.cryptograss.live/build-previews/${COMMIT_SHA}"
+                            targetUrl: "https://maybelle.cryptograss.live/build-previews/${COMMIT_SHA}"
                         )
                         
                         // Add preview URLs to build description
