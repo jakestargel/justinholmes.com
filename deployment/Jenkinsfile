@@ -136,13 +136,17 @@ pipeline {
             }
         }
     
-
-
         stage('Deploy') {
             steps {
                 script {
+                    // Add debug logging
+                    echo "CHANGE_ID: ${env.CHANGE_ID}"
+                    echo "All environment variables:"
+                    sh 'env | sort'
+                    
                     // Check if this is a PR build
                     def isPR = env.CHANGE_ID != null
+                    echo "isPR: ${isPR}"
                     
                     if (isPR) {
                         // Deploy to PR builds directory
@@ -164,11 +168,8 @@ pipeline {
                             </body></html>' > ${PR_BUILDS_DIR}/${COMMIT_SHA}/index.html
                         """
                     } else {
-                        // Production deployment
-                        sh '''
-                            rsync -av output/justinholmes.com.public.dist/ /var/www/justinholmes.com/
-                            rsync -av output/cryptograss.live.public.dist/ /var/www/cryptograss.live/
-                        '''
+                        // Production deployment - TODO: rsync to web server.
+                        sh
                     }
                 }
             }

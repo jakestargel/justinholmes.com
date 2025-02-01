@@ -36,7 +36,8 @@ RUN jenkins-plugin-cli --plugins \
     pipeline-stage-view \
     pipeline-graph-view \
     dark-theme \
-    github-branch-source
+    github-branch-source \
+    build-name-setter
 
 # Create directory for Configuration as Code
 RUN mkdir -p /var/jenkins_home/casc_configs
