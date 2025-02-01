@@ -10,7 +10,7 @@ pipeline {
         NODE_VERSION = '23.6.1'
         NVM_DIR = '/var/jenkins_home/.nvm'
         SECRETS_DIR = '/var/jenkins_home/secrets'
-        PR_BUILDS_DIR = '/var/www/builds'
+        PR_BUILDS_DIR = '/var/jenkins_home/www/builds'
         COMMIT_SHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     }
     
