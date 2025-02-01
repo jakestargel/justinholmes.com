@@ -11,9 +11,10 @@ pipeline {
         NVM_DIR = '/var/jenkins_home/.nvm'
         SECRETS_DIR = '/var/jenkins_home/secrets'
         PR_BUILDS_DIR = '/var/jenkins_home/www/builds'
+        CHAIN_DATA_DIR = '/var/jenkins_home/shared/chain_data'
         COMMIT_SHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     }
-    
+
     stages {
         stage('Setup Environment') {
             steps {
@@ -62,25 +63,14 @@ pipeline {
                 stage('Run Tests') {
                     steps {
                         sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
-                    npm test
-                '''
-                    }
-                }
-
-                stage("Fetch Chain Data") {
-                    steps {
-                        sh '''
                             export NVM_DIR="$NVM_DIR"
                             [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                             nvm use ${NODE_VERSION}
-                            npm run fetch-chain-data
+                            npm test
                         '''
                     }
                 }
-                
+
                 stage('Fetch Blue Railroads Metadata') {
                     steps {
                         sh '''
@@ -92,6 +82,19 @@ pipeline {
                     }
                 }
 
+                stage('Verify Chain Data') {
+                    steps {
+                        sh '''
+                            if [ ! -f "${CHAIN_DATA_DIR}/.last_fetch_success" ]; then
+                                echo "Chain data not found or outdated. Please ensure chain-data-fetcher job is running."
+                                exit 1
+                            fi
+
+                            # Create symlink to shared chain data
+                            ln -sfn ${CHAIN_DATA_DIR} ${WORKSPACE}/chain_data
+                        '''
+                    }
+                }
             }
         }
 
