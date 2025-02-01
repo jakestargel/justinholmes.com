@@ -197,13 +197,13 @@ At this point, mandolin player Jarrod Walker (who happens to be the younger brot
 
 And sure enough, Jarrod's choice had been The Two Sisters (which they typically write on setlists as "Oh The Wind And Rain"). Jarrod knows that I like and play this song, and also knew I was going to be in the audience that night, but whether my presence had any effect I don't know; almost certainly coincidence I reckon. Either way, I was thankful because it was a lovely version, and it was a great moment for me and my family.
 
-As an aside: after that show, the band's bassist Royal Masat came over to my AirBnb, where we shared a bottle of wine and talked about music late into the night, along with my family and our mutual friend Gabrielle Simard, a circus star and software engineer who was in town. Royal very encouraging about my music and my career, and it was a very validating moment, just when I needed a reason to keep going. Thanks Royal. 
+As an aside: after that show, the band's bassist Royal Masat came over to my AirBnb, where we shared a bottle of wine and talked about music late into the night, along with my family and our mutual friend Gabrielle Simard, a circus star and software engineer who was in town. Royal was (and has since been) very encouraging about my music and my career, and it was a very validating moment, just when I needed a reason to keep going. Thanks Royal. 
 
 ### As cryptograss
 
 Although I don't closely keep track of this statistic, I suspect that The Two Sisters is the traditional song which we are most often requested to play at various cypherpunk events. I have noted and described the incredible thirst for traditional music among the cypherpunk community at many shows and podcast appearances, and the age and many threads of this one seems to be captivating to the crypto native mind.
 
-We played this song at six show with our dear friend and kickass fiddler [Kuba Hejhal](/kuba), who left this world in September 2024. Kuba was a special cryptograsser; he took very seriously the task of doing justice to this song.
+We played this song at six shows with our dear friend and kickass fiddler [Kuba Hejhal](/kuba), who left this world in September 2024. Kuba was a special cryptograsser; he took very seriously the task of doing justice to this song.
 
 As a band, we've played it at {{ song.plays.length }} shows so far, and it's always interesting to see how y'all respond. For whatever reason(s), it seems to be counter-intuitive to many people to suppose that these old songs might hit so hard, and be such a quintessential piece of the cypherpunk puzzle. But **this song has survived and surged for three and a half centuries with no need for copyrights or centralized authorities** to protect it. It serves as an easy and obvious example of what we hope decentralized society to be.
 
@@ -293,19 +293,19 @@ A very different 1932 version, as "The Twa Sisters", also mentions a barefoot yo
 > An' sae slyly she dung her in,
 > An' the swan swims sae bonnie, O.
 
-An 1860 version written as 'Benorie', documented in the Scottish Highlands, also mentions the younger sister being barefoot. amd the miller pulling her out of the water by her bare feet.
+An 1860 version written as 'Benorie', documented in the Scottish Highlands, also mentions the younger sister being barefoot, and the miller pulling her out of the water by her bare feet.
 
 Some other versions mention her having silver slippers (in some caes, which fall off during her float toward the miller's dam/pond) or leather shoes.
 
 I sometimes sing as follows:
 
-*"There were two sisters of County Luce" (keeping the reference from the Welch/Rawlings version of their country of origin, but changing it to a county in Michigan, near my own roots, and Billy Strings' as well)*
+*"There were two sisters of County Luce" (keeping the reference from the Welch/Rawlings version of their country of origin, but changing it to a county in Michigan, near my own familial roots, and Billy Strings' as well)*
 
 *"They were only able to afford the older one's shoes" (which nods to the many "poor sisters" and "barefoot younger sister" variants)*
 
 ### Her hair: what is it used for?  Is it fine or dready?
 
-In most versions, the younger sister's hair is used to make either the strings of the instrument or to sring the the bow. In some versions, it is used to make the fiddle itself.
+In most versions, the younger sister's hair is used to make either the strings of the instrument or to sting the the bow. In some versions, it is used to make the fiddle itself.
 
 The most common quality of her hair we find is its color: yellow, gold, or "gowd", though, as I mentioned above, this quality only gains quasi-ubiquity once the songs becomes ppopular in Scandinavia. 
 
