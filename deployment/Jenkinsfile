@@ -141,35 +141,46 @@ pipeline {
                 script {
                     // Add debug logging
                     echo "CHANGE_ID: ${env.CHANGE_ID}"
-                    echo "All environment variables:"
-                    sh 'env | sort'
                     
                     // Check if this is a PR build
                     def isPR = env.CHANGE_ID != null
                     echo "isPR: ${isPR}"
                     
                     if (isPR) {
-                        // Deploy to PR builds directory
+                        // Create beta banner content
+                        def betaBanner = """
+                            <div style='background-color: #ff6b6b; color: white; padding: 1em; text-align: center; position: fixed; top: 0; left: 0; right: 0; z-index: 9999;'>
+                                ⚠️ BETA VERSION - Commit ${COMMIT_SHA} ⚠️<br>
+                                See: <a href='${env.CHANGE_URL}'>Pull Request #${env.CHANGE_ID}, requesting merge of ${env.CHANGE_BRANCH} from ${env.CHANGE_FORK}</a><br>
+                                This is a preview build. Use at your own risk. Features may be incomplete or unstable.
+                            </div>
+                        """
+                        
+                        // Deploy to PR builds directory with correct asset paths
                         sh """
                             # Create commit-specific directory
                             mkdir -p ${PR_BUILDS_DIR}/${COMMIT_SHA}
                             
-                            # Deploy both sites to the PR build directory
+                            # Deploy sites with asset path corrections
                             rsync -av output/justinholmes.com.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/justinholmes.com/
                             rsync -av output/cryptograss.live.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/cryptograss.live/
                             
-                            # Add a simple index page to list both sites
+                            # Update asset paths in HTML files
+                            find ${PR_BUILDS_DIR}/${COMMIT_SHA} -type f -name "*.html" -exec sed -i 's|/assets/|./assets/|g' {} +
+                            
+                            # Inject beta banner into all HTML files
+                            find ${PR_BUILDS_DIR}/${COMMIT_SHA} -type f -name "*.html" -exec sed -i "s|<body>|<body>${betaBanner}|" {} +
+                            
+                            # Add a simple index page
                             echo '<html><body>
                                 <h1>PR Build for ${COMMIT_SHA}</h1>
+                                <p>⚠️ BETA VERSION - Use at your own risk ⚠️</p>
                                 <ul>
-                                    <li><a href="justinholmes.com">justinholmes.com</a></li>
-                                    <li><a href="cryptograss.live">cryptograss.live</a></li>
+                                    <li><a href='justinholmes.com/'>justinholmes.com</a></li>
+                                    <li><a href='cryptograss.live/'>cryptograss.live</a></li>
                                 </ul>
-                            </body></html>' > ${PR_BUILDS_DIR}/${COMMIT_SHA}/index.html
+                                </body></html>' > ${PR_BUILDS_DIR}/${COMMIT_SHA}/index.html
                         """
-                    } else {
-                        // Production deployment - TODO: rsync to web server.
-                        sh
                     }
                 }
             }
