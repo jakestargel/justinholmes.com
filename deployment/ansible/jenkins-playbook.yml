@@ -17,8 +17,8 @@
     secrets_max_level: 1  # Copy secrets from level 0 to this number
     required_secrets:
       env_file: "0/.env"
-      tls_cert: "1/ssl/builder.cryptograss.live/cert.pem"
-      tls_privkey: "1/ssl/builder.cryptograss.live/privkey.pem"
+      tls_cert: "1/ssl/maybelle.cryptograss.live/cert.pem"
+      tls_privkey: "1/ssl/maybelle.cryptograss.live/privkey.pem"
       jenkins_admin_password: "2/jenkins_admin_password"
       github_token: "2/github_token"
 
