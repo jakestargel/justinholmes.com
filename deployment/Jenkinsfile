@@ -7,6 +7,7 @@ pipeline {
     }
 
     environment {
+        NVM_SILENT = 'true'
         NODE_VERSION = '23.6.1'
         NVM_DIR = '/var/jenkins_home/.nvm'
         SECRETS_DIR = '/var/jenkins_home/secrets'
@@ -19,13 +20,17 @@ pipeline {
     stages {
         stage('Setup Environment') {
             steps {
-                sh '''
+                sh '''#!/bin/bash
                     # Install NVM if not present
                     if [ ! -d "$NVM_DIR" ]; then
                         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-                        export NVM_DIR="$NVM_DIR"
-                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                        chmod -R 755 "$NVM_DIR"  # Add execute permissions
                     fi
+                    
+                    # Ensure NVM script is executable
+                    chmod +x "$NVM_DIR/nvm.sh"
+                
+                    nvm use ${NODE_VERSION} --silent
                     
                     # Copy .env file from secrets
                     cp ${SECRETS_DIR}/0/.env .env
@@ -33,86 +38,69 @@ pipeline {
                 '''
             }
         }
-        
-        stage('Setup NodeJS ${NODE_VERSION}') {
-            steps {
-                sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm install ${NODE_VERSION}
-                    nvm use ${NODE_VERSION}
-                '''
-            }
-        }
+
         
         stage('Install Dependencies') {
             steps {
                 // Only install if node_modules doesn't exist or package.json changed
-                sh '''
+                sh '''#!/bin/bash
                     if [ ! -d "node_modules" ] || [ package.json -nt node_modules ]; then
-                        export NVM_DIR="$NVM_DIR"
-                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                        nvm use ${NODE_VERSION}
+                        . "$NVM_DIR/nvm.sh" --silent
+                        nvm use ${NODE_VERSION} --silent
                         npm install
                     fi
                 '''
             }
         }
 
-        stage('Tests and Fetches') {
-            parallel {
-                stage('Run Tests') {
-                    steps {
-                        sh '''
-                            export NVM_DIR="$NVM_DIR"
-                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                            nvm use ${NODE_VERSION}
-                            npm test
-                        '''
-                    }
-                }
+        
+        stage('Run Tests') {
+            steps {
+                sh '''#!/bin/bash
+                    . "$NVM_DIR/nvm.sh" --silent
+                    nvm use ${NODE_VERSION} --silent
+                    npm test
+                    '''
+            }
+        }
                 
-                stage('Copy Chain Data') {
-                    steps {
-                        sh '''
-                            if [ ! -f "${SHARED_DATA_DIR}/chain_data/.last_fetch_success" ]; then
-                                echo "Chain data not found or outdated. Please ensure chain-data-fetcher job is running."
-                                exit 1
-                            fi
-                            
-                            # Create chain data dir
-                            mkdir -p ${CHAIN_DATA_DIR}
-                            
-                            # Copy shared data to workspace
-                            cp -r ${SHARED_DATA_DIR}/chain_data/* ${CHAIN_DATA_DIR}/
-                        '''
-                    }
-                }
+        stage('Copy Chain Data') {
+            steps {
+                sh '''#!/bin/bash
+                    if [ ! -f "${SHARED_DATA_DIR}/chain_data/.last_fetch_success" ]; then
+                        echo "Chain data not found or outdated. Please ensure chain-data-fetcher job is running."
+                        exit 1
+                    fi
+                    
+                    # Create chain data dir
+                    mkdir -p ${CHAIN_DATA_DIR}
+                    
+                    # Copy shared data to workspace
+                    cp -r ${SHARED_DATA_DIR}/chain_data/* ${CHAIN_DATA_DIR}/
+                '''
             }
         }
 
         stage('Download Blue Railroad Videos') {
             steps {
-                sh '''
-                    export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
+                sh '''#!/bin/bash
+                    . "$NVM_DIR/nvm.sh" --silent
+                    nvm use ${NODE_VERSION} --silent
                     npm run download-videos
                 '''
             }
         }
 
-        stage("Build") {
+        stage("Build all sites in parallel") {
 
             parallel {
                     
                 stage('Build cryptograss.live') {
                     steps {
-                        sh '''
-                            export NVM_DIR="$NVM_DIR"
+                        sh '''#!/bin/bash
                             export SITE=cryptograss.live
-                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                            nvm use ${NODE_VERSION}
+                            . "$NVM_DIR/nvm.sh" --silent
+                            nvm use ${NODE_VERSION} --silent
                             npm run build
                         '''
                     }
@@ -120,11 +108,10 @@ pipeline {
 
                 stage('Build justinholmes.com') {
                     steps {
-                        sh '''
-                            export NVM_DIR="$NVM_DIR"
+                        sh '''#!/bin/bash
                             export SITE=justinholmes.com
-                            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                            nvm use ${NODE_VERSION}
+                            . "$NVM_DIR/nvm.sh" --silent
+                            nvm use ${NODE_VERSION} --silent
                             npm run build
                         '''
                     }

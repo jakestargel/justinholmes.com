@@ -24,12 +24,6 @@ jenkins:
           - "Job/Read"
           - "Overall/Read"
 
-  nodes:
-    - permanent:
-        name: "built-in"
-        remoteFS: "/var/jenkins_home"
-        numExecutors: 2
-
 jobs:
   - file: /var/jenkins_home/jobs/production.groovy
   - file: /var/jenkins_home/jobs/pull-requests.groovy

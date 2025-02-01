@@ -91,12 +91,21 @@
         dest: "{{ jenkins_home }}/docker-build/"
         mode: '0644'
 
+    - name: Create blank .bashrc
+      file:
+        path: "{{ jenkins_home }}/.bashrc"
+        state: touch
+        mode: '0644'
+        owner: 1000
+        group: 1000
+
     - name: Build Jenkins Docker image
       docker_image:
         name: cryptograss-jenkins
         build:
           path: "{{ jenkins_home }}/docker-build"
           pull: yes
+          nocache: yes
         source: build
         force_source: yes
 
@@ -198,11 +207,6 @@
       debug:
         msg: "Add this public key to authorized_keys on your web servers: {{ ssh_key.public_key }}"
       when: ssh_key.changed
-
-    - name: Remove existing jobs directory if it exists
-      file:
-        path: "{{ jenkins_home }}/jobs"
-        state: absent
 
     - name: Create Jenkins job definitions directory
       file:

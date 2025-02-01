@@ -14,6 +14,6 @@ pipelineJob('fetch-chain-data') {
         }
     }
     triggers {
-        scm('1-59/2 * * * *') // Every odd minute
+        cron('1-59/2 * * * *')  // Run every odd minute
     }
 }

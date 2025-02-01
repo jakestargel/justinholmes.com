@@ -14,8 +14,8 @@ pipeline {
                 sh '''
                     mkdir -p ${CHAIN_DATA_DIR}
                     export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm install ${NODE_VERSION}
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" --no-use > /dev/null
+                    nvm use ${NODE_VERSION} > /dev/null
                     nvm use ${NODE_VERSION}
                     npm install
                 '''
@@ -26,8 +26,8 @@ pipeline {
             steps {
                 sh '''
                     export NVM_DIR="$NVM_DIR"
-                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-                    nvm use ${NODE_VERSION}
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" --no-use > /dev/null
+                    nvm use ${NODE_VERSION} > /dev/null
                     CHAIN_DATA_OUTPUT_DIR=${CHAIN_DATA_DIR} npm run fetch-chain-data
 
                     # Copy the data to shared location
