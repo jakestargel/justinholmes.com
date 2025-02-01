@@ -139,48 +139,40 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Add debug logging
                     echo "CHANGE_ID: ${env.CHANGE_ID}"
-                    
-                    // Check if this is a PR build
                     def isPR = env.CHANGE_ID != null
                     echo "isPR: ${isPR}"
                     
                     if (isPR) {
-                        // Create beta banner content
-                        def betaBanner = """
-                            <div style='background-color: #ff6b6b; color: white; padding: 1em; text-align: center; position: fixed; top: 0; left: 0; right: 0; z-index: 9999;'>
-                                ⚠️ BETA VERSION - Commit ${COMMIT_SHA} ⚠️<br>
-                                See: <a href='${env.CHANGE_URL}'>Pull Request #${env.CHANGE_ID}, requesting merge of ${env.CHANGE_BRANCH} from ${env.CHANGE_FORK}</a><br>
-                                This is a preview build. Use at your own risk. Features may be incomplete or unstable.
-                            </div>
-                        """
+                        // Create PR build directory
+                        sh "mkdir -p ${PR_BUILDS_DIR}/${COMMIT_SHA}"
                         
-                        // Deploy to PR builds directory with correct asset paths
+                        // Deploy sites
                         sh """
-                            # Create commit-specific directory
-                            mkdir -p ${PR_BUILDS_DIR}/${COMMIT_SHA}
-                            
-                            # Deploy sites with asset path corrections
                             rsync -av output/justinholmes.com.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/justinholmes.com/
                             rsync -av output/cryptograss.live.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/cryptograss.live/
-                            
-                            # Update asset paths in HTML files
-                            find ${PR_BUILDS_DIR}/${COMMIT_SHA} -type f -name "*.html" -exec sed -i 's|/assets/|./assets/|g' {} +
-                            
-                            # Inject beta banner into all HTML files
-                            find ${PR_BUILDS_DIR}/${COMMIT_SHA} -type f -name "*.html" -exec sed -i "s|<body>|<body>${betaBanner}|" {} +
-                            
-                            # Add a simple index page
-                            echo '<html><body>
-                                <h1>PR Build for ${COMMIT_SHA}</h1>
-                                <p>⚠️ BETA VERSION - Use at your own risk ⚠️</p>
-                                <ul>
-                                    <li><a href='justinholmes.com/'>justinholmes.com</a></li>
-                                    <li><a href='cryptograss.live/'>cryptograss.live</a></li>
-                                </ul>
-                                </body></html>' > ${PR_BUILDS_DIR}/${COMMIT_SHA}/index.html
                         """
+                        
+                        // Run HTML modification script with proper Node.js setup
+                        withEnv([
+                            "PR_BUILD_DIR=${PR_BUILDS_DIR}/${COMMIT_SHA}",
+                            "COMMIT_SHA=${COMMIT_SHA}",
+                            "CHANGE_URL=${env.CHANGE_URL}",
+                            "CHANGE_ID=${env.CHANGE_ID}",
+                            "CHANGE_BRANCH=${env.CHANGE_BRANCH}",
+                            "CHANGE_FORK=${env.CHANGE_FORK}"
+                        ]) {
+                        sh """
+                            export NVM_DIR="\$HOME/.nvm"
+                            [ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh"  # Load nvm
+                            nvm use ${NODE_VERSION}
+                            
+                            NODE_PATH=\$(npm root -g)
+                            export NODE_PATH
+                            
+                            node deployment/scripts/modify_build_htmls.js
+                        """
+                        }   
                     }
                 }
             }
