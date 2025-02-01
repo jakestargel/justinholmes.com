@@ -12,7 +12,7 @@ const {
 } = process.env;
 
 const betaBanner = `
-<div style='background-color: #ff6b6b; color: white; padding: 1em; text-align: center; position: fixed; top: 0; left: 0; right: 0; z-index: 9999;'>
+<div style='background-color: #ff6b6b; color: white; padding: 1em; text-align: center; position: absolute; top: 0; left: 0; right: 0; z-index: 9999;'>
     ⚠️ BETA VERSION - Commit ${COMMIT_SHA} ⚠️<br>
     See: <a href='${CHANGE_URL}'>Pull Request #${CHANGE_ID}, requesting merge of ${CHANGE_BRANCH} from ${CHANGE_FORK}</a><br>
     This is a preview build. Use at your own risk. Features may be incomplete or unstable.
@@ -23,8 +23,9 @@ const indexPage = `
 <html>
 <head><title>PR Build ${COMMIT_SHA}</title></head>
 <body>
-    <h1>PR Build for ${COMMIT_SHA}</h1>
-    <p>⚠️ BETA VERSION - Use at your own risk ⚠️</p>
+    <h2>PR Build for ${COMMIT_SHA}</h2>
+    <h3>BETA VERSIONS - Use at your own risk<h3>
+    <h4>    See: <a href='${CHANGE_URL}'>Pull Request #${CHANGE_ID}, requesting merge of ${CHANGE_BRANCH} from ${CHANGE_FORK}</a></h4>
     <ul>
         <li><a href='justinholmes.com/'>justinholmes.com</a></li>
         <li><a href='cryptograss.live/'>cryptograss.live</a></li>
