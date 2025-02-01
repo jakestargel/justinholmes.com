@@ -4,7 +4,8 @@ pipeline {
     environment {
         NODE_VERSION = '23.6.1'
         NVM_DIR = '/var/jenkins_home/.nvm'
-        CHAIN_DATA_DIR = '/var/jenkins_home/shared/chain_data'
+        SHARED_DATA_DIR = '/var/jenkins_home/shared'
+        CHAIN_DATA_DIR = "${SHARED_DATA_DIR}/chain_data"
     }
     
     stages {
@@ -28,6 +29,9 @@ pipeline {
                     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
                     nvm use ${NODE_VERSION}
                     CHAIN_DATA_OUTPUT_DIR=${CHAIN_DATA_DIR} npm run fetch-chain-data
+
+                    # Copy the data to shared location
+                    cp -r output/_prebuild_chain_data/* ${CHAIN_DATA_DIR}/
                 '''
             }
         }
