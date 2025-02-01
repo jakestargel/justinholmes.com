@@ -1,6 +1,6 @@
 jenkins:
-  systemMessage: "Cryptograss Jenkins Instance"
-  numExecutors: 2
+  systemMessage: "Cryptograss Project Builder"
+  numExecutors: 3
   scmCheckoutRetryCount: 2
   mode: NORMAL
   

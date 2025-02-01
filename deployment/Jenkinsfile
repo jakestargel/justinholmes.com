@@ -155,8 +155,8 @@ pipeline {
                             mkdir -p ${PR_BUILDS_DIR}/${COMMIT_SHA}
                             
                             # Deploy both sites to the PR build directory
-                            rsync -av output/justinholmes.com.public.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/justinholmes.com/
-                            rsync -av output/cryptograss.live.public.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/cryptograss.live/
+                            rsync -av output/justinholmes.com.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/justinholmes.com/
+                            rsync -av output/cryptograss.live.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/cryptograss.live/
                             
                             # Add a simple index page to list both sites
                             echo '<html><body>

@@ -37,6 +37,7 @@ RUN jenkins-plugin-cli --plugins \
     pipeline-graph-view \
     dark-theme \
     github-branch-source \
+    mask-passwords \
     build-name-setter
 
 # Create directory for Configuration as Code
