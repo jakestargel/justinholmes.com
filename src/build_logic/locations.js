@@ -57,6 +57,15 @@ export function initProjectDirs(site_name) {
     return projectDirs;
 }
 
+export const getBasePath = () => {
+    // For preview builds, use the commit SHA as the base path
+    if (process.env.PREVIEW_BUILD === 'true' && process.env.COMMIT_SHA) {
+        return `/build-previews/${process.env.COMMIT_SHA}`;
+    }
+    // For production builds, use root
+    return '';
+};
+
 export function getProjectDirs() {
     if (!projectDirs.initialized) {
         throw new Error("Project directories not initialized. Call initProjectDirs first.");
