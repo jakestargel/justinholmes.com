@@ -13,17 +13,17 @@ pipeline {
         SECRETS_DIR = '/var/jenkins_home/secrets'
         PR_BUILDS_DIR = '/var/jenkins_home/www/builds'
         SHARED_DATA_DIR = '/var/jenkins_home/shared'
-        CHAIN_DATA_DIR = "${WORKSPACE}/chain_data"
+        CHAIN_DATA_DIR = "${WORKSPACE}/output/_prebuild_chain_data"
         COMMIT_SHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     }
 
     stages {
         stage('Setup Environment') {
-            steps {
+            steps { // TODO: Dehydrate instead of hardcoding 40.1
                 sh '''#!/bin/bash
                     # Install NVM if not present
                     if [ ! -d "$NVM_DIR" ]; then
-                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+                        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
                         chmod -R 755 "$NVM_DIR"  # Add execute permissions
                     fi
                     
@@ -63,6 +63,14 @@ pipeline {
                     '''
             }
         }
+
+        stage('Create Chain Data Directory') {
+            steps {
+                sh '''#!/bin/bash
+                    mkdir -p ${CHAIN_DATA_DIR}
+                '''
+            }
+        }
                 
         stage('Copy Chain Data') {
             steps {
@@ -76,7 +84,17 @@ pipeline {
                     mkdir -p ${CHAIN_DATA_DIR}
                     
                     # Copy shared data to workspace
-                    cp -r ${SHARED_DATA_DIR}/chain_data/* ${CHAIN_DATA_DIR}/
+                    cp -r ${SHARED_DATA_DIR}/chain_data/* ${CHAIN_DATA_DIR}
+                '''
+            }
+        }
+
+        stage('Fetch Blue Railroad Metadata') {
+            steps {
+                sh '''#!/bin/bash
+                    . "$NVM_DIR/nvm.sh" --silent
+                    nvm use ${NODE_VERSION} --silent
+                    npm run fetch-video-metadata
                 '''
             }
         }
@@ -156,7 +174,7 @@ pipeline {
                             node deployment/scripts/modify_build_htmls.js
                         """
                         }
-                        def previewUrls = """🔍 [Preview URLs for PR #${env.CHANGE_ID}](https://maybelle.cryptograss.live/build-previews/${COMMIT_SHA})"""
+                        def previewUrls = """🔍 [Preview URLs for ${env.COMMIT_SHA}](https://maybelle.cryptograss.live/build-previews/${COMMIT_SHA})"""
                             
                         // Post comment on GitHub PR
                         pullRequest.comment(previewUrls)

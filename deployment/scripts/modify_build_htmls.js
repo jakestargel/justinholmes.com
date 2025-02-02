@@ -47,6 +47,7 @@ async function modifyHtmlFiles() {
 
             // Add beta banner
             content = content.replace(/<body([^>]*)>/i, `<body$1>${betaBanner}`);
+            console.log("Modified file: ", file);
 
             await fs.writeFile(file, content);
         }
