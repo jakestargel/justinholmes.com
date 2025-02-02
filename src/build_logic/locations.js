@@ -54,15 +54,19 @@ export function initProjectDirs(site_name) {
         ? 'http://localhost:4050'
         : 'https://cryptograss.live';
 
+    projectDirs.basePath = getBasePath(site_name);
+
     return projectDirs;
 }
 
-export const getBasePath = () => {
+const getBasePath = (site_name) => {
     // For preview builds, use the commit SHA as the base path
     if (process.env.PREVIEW_BUILD === 'true' && process.env.COMMIT_SHA) {
-        return `/build-previews/${process.env.COMMIT_SHA}`;
+        console.log(`Base path (preview for ${site_name}): `, `/build-previews/${process.env.COMMIT_SHA}/${site_name}`);
+        return `/build-previews/${process.env.COMMIT_SHA}/${site_name}`;
     }
     // For production builds, use root
+    console.log("Base path (non-preview): ", `/${site_name}`);
     return '';
 };
 

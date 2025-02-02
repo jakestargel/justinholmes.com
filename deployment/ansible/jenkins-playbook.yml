@@ -105,7 +105,6 @@
         build:
           path: "{{ jenkins_home }}/docker-build"
           pull: yes
-          nocache: yes
         source: build
         force_source: yes
 

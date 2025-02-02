@@ -1,10 +1,10 @@
 import path from "path";
 import fs from "fs";
 import nunjucks from "nunjucks";
-import { getBasePath, getProjectDirs } from "../locations.js";
+import { getProjectDirs } from "../locations.js";
 
 export function renderPage({ template_path, context, output_path, layout = "base.njk", site }) {
-    const { outputPrimaryRootDir, templateDir } = getProjectDirs();
+    const { outputPrimaryRootDir, templateDir, basePath } = getProjectDirs();
     const outputFilePath = path.join(outputPrimaryRootDir, site, output_path);
 
     if (!fs.existsSync(outputFilePath)) {
@@ -14,7 +14,7 @@ export function renderPage({ template_path, context, output_path, layout = "base
 
     let rendered_page = nunjucks.render(template, {
         ...context,
-        basePath: getBasePath()
+        basePath: basePath
     });
 
     fs.writeFileSync(outputFilePath, rendered_page);
