@@ -192,24 +192,30 @@
         path: "~/.ssh/id_ed25519"
         type: ed25519
         state: present
-      register: ssh_key
+    
+    - name: Ensure that known_hosts is present
+      ansible.builtin.file:
+        path: "~/.ssh/known_hosts"
+        state: touch
+
+    - name: Add known_hosts entry for nearlyfreespeech.net
+      ansible.builtin.known_hosts:
+        host: ssh.nyc1.nearlyfreespeech.net
+        hash_host: yes
+        key: "|1|kXmD+AGFcaF62DEuUeuL+47t/BA=|Ri2jtfePwmmkcsa9BerY+xC+Epw= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICbXE1f5S3N/flFHUm2i97tzKGJUWzxotY1HHBMIX72h"
+        state: present
 
     # TODO: We copy the sites here, but this probably needs to be generalized somehow.
     
     - name: Cronjob to rsync production builds to web servers (justinholmes.com)
       ansible.builtin.cron:
         name: "push jh to prod"
-        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/justinholmes.com.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:justinholmes.com >> ~/justinholmes.com.rsync.log"
+        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/justinholmes.com.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:justinholmes.com >> ~/justinholmes.com.rsync.log 2>&1"
     
     - name: Cronjob to rsync production builds to web servers (cryptograss.live)
       ansible.builtin.cron:
         name: "push cg to prod"
-        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/cryptograss.live.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:cryptograss.live >> ~/cryptograss.live.rsync.log"
-
-    - name: Display public key
-      debug:
-        msg: "Add this public key to authorized_keys on your web servers: {{ ssh_key.public_key }}"
-      when: ssh_key.changed
+        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/cryptograss.live.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:cryptograss.live >> ~/cryptograss.live.rsync.log 2>&1"
 
     - name: Create Jenkins job definitions directory
       file:
@@ -235,8 +241,18 @@
         owner: www-data
         group: www-data
 
+    - name: Slurp public SSH key
+      ansible.builtin.slurp:
+        src: ~/.ssh/id_ed25519.pub
+      register: ssh_trinket
+
+    - name: Print SSH trinket
+      ansible.builtin.debug:
+        msg: "{{ ssh_trinket['content'] | b64decode }}"
+
   handlers:
     - name: Restart Nginx
       service:
         name: nginx
         state: restarted
+  
