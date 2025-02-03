@@ -47,3 +47,8 @@ credentials:
                 directEntry:
                   privateKey: ${JENKINS_SSH_KEY}
               description: "SSH key for rsync deployments"
+
+unclassified:
+  location:
+    adminAddress: "admin@cryptograss.live"
+    url: "https://maybelle.cryptograss.live/"

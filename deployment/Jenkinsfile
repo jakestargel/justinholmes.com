@@ -178,8 +178,8 @@ pipeline {
                         """
                         } 
                         // TODO: Instead of hardcoding the port, use the port from the nginx config
-                        def previewUrls = """🔍 [Preview URLs](https://maybelle.cryptograss.live:8081/build-previews/${COMMIT_SHA}) for ${env.COMMIT_SHA} - ${env.COMMIT_MESSAGE}"""
-                            
+                        def previewUrls = """🔍 [Preview URLs](https://maybelle.cryptograss.live:8081/build-previews/${COMMIT_SHA}) for ${env.COMMIT_SHA}"""
+
                         // Post comment on GitHub PR
                         pullRequest.comment(previewUrls)
                         

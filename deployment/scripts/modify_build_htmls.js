@@ -14,12 +14,12 @@ const {
 } = process.env;
 
 const warningBanner = `
-<div style='background-color: #510000; color: white; padding: 1em; text-align: center; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height:80px;'>
+<div style='background-color: #510000; color: white; text-align: center; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height:80px;'>
     ⚠️ PULL REQUEST BUILD - Commit ${COMMIT_SHA} ⚠️<br>
     <a href='${CHANGE_URL}' style='color: white; text-decoration: underline;'>
         PR #${CHANGE_ID}: ${CHANGE_BRANCH} from ${CHANGE_FORK}
     </a><br>
-    This is a preview build. Features may be incomplete or unstable.
+    This is a preview build. Features may be incomplete, unstable, unaudited, and insecure.
 </div>
 `;
 
