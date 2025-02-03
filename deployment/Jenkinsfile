@@ -162,7 +162,9 @@ pipeline {
                             "CHANGE_URL=${env.CHANGE_URL}",
                             "CHANGE_ID=${env.CHANGE_ID}",
                             "CHANGE_BRANCH=${env.CHANGE_BRANCH}",
-                            "CHANGE_FORK=${env.CHANGE_FORK}"
+                            "CHANGE_FORK=${env.CHANGE_FORK}",
+                            "CHANGE_TITLE=${env.CHANGE_TITLE}",
+                            "COMMIT_MESSAGE=${env.COMMIT_MESSAGE}"
                         ]) {
                         sh """
                             export NVM_DIR="\$HOME/.nvm"
@@ -174,8 +176,9 @@ pipeline {
                             
                             node deployment/scripts/modify_build_htmls.js
                         """
-                        }
-                        def previewUrls = """🔍 [Preview URLs for ${env.COMMIT_SHA}](https://maybelle.cryptograss.live/build-previews/${COMMIT_SHA})"""
+                        } 
+                        // TODO: Instead of hardcoding the port, use the port from the nginx config
+                        def previewUrls = """🔍 [Preview URLs](https://maybelle.cryptograss.live:8081/build-previews/${COMMIT_SHA}) for ${env.COMMIT_SHA} - ${env.COMMIT_MESSAGE}"""
                             
                         // Post comment on GitHub PR
                         pullRequest.comment(previewUrls)

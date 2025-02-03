@@ -66,7 +66,7 @@ const getBasePath = (site_name) => {
         return `/build-previews/${process.env.COMMIT_SHA}/${site_name}`;
     }
     // For production builds, use root
-    console.log("Base path (non-preview): ", `/${site_name}`);
+    console.log("Base path (non-preview): ", `/`);
     return '';
 };
 

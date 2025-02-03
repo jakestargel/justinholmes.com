@@ -8,14 +8,18 @@ const {
     CHANGE_URL,
     CHANGE_ID,
     CHANGE_BRANCH,
-    CHANGE_FORK
+    CHANGE_FORK,
+    CHANGE_TITLE,
+    COMMIT_MESSAGE,
 } = process.env;
 
-const betaBanner = `
-<div style='background-color: #ff6b6b; color: white; padding: 1em; text-align: center; position: absolute; top: 0; left: 0; right: 0; z-index: 9999;'>
-    ⚠️ BETA VERSION - Commit ${COMMIT_SHA} ⚠️<br>
-    See: <a href='${CHANGE_URL}'>Pull Request #${CHANGE_ID}, requesting merge of ${CHANGE_BRANCH} from ${CHANGE_FORK}</a><br>
-    This is a preview build. Use at your own risk. Features may be incomplete or unstable.
+const warningBanner = `
+<div style='background-color: #510000; color: white; padding: 1em; text-align: center; position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height:80px;'>
+    ⚠️ PULL REQUEST BUILD - Commit ${COMMIT_SHA} ⚠️<br>
+    <a href='${CHANGE_URL}' style='color: white; text-decoration: underline;'>
+        PR #${CHANGE_ID}: ${CHANGE_BRANCH} from ${CHANGE_FORK}
+    </a><br>
+    This is a preview build. Features may be incomplete or unstable.
 </div>
 `;
 
@@ -45,11 +49,24 @@ async function modifyHtmlFiles() {
             // Fix asset paths
             content = content.replace(/\/assets\//g, './assets/');
 
-            // Add beta banner
-            content = content.replace(/<body([^>]*)>/i, `${betaBanner}<body$1>`);
-            console.log("Modified file: ", file);
+            // Add warning banner at the top of the body
+            content = content.replace(
+                /<body([^>]*)>/i,
+                `<body$1>${warningBanner}`
+            );
+
+            // Add CSS variable for content padding
+            content = content.replace(
+                /<\/head>/i,
+                `<style>
+                    :root { --warning-height: 80px; }
+                    body { padding-top: var(--warning-height); }
+                </style>
+                </head>`
+            );
 
             await fs.writeFile(file, content);
+            console.log("Modified file: ", file);
         }
 
         // Create index page
