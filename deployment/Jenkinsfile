@@ -193,12 +193,6 @@ pipeline {
                         
                         // Add preview URLs to build description
                         currentBuild.description = previewUrls
-                    } else {
-                        // Production rsync
-                        sh """
-                            rsync -vah --delete output/justinholmes.com.dist/ jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:justinholmes.com
-                            rsync -vah --delete output/cryptograss.live.dist/ jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:cryptograss.live
-                        """
                     }
                 }
             }

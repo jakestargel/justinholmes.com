@@ -336,6 +336,21 @@ export async function fetch_chaindata(shows) {
 }
 
 export async function get_times_for_shows() {
+    const { showsDir } = getProjectDirs();
+    const apiKey = process.env.ALCHEMY_API_KEY;
+
+    const config = createConfig({
+        chains: [mainnet, optimism, optimismSepolia, arbitrum],
+        transports: {
+            [mainnet.id]: http(`https://eth-mainnet.g.alchemy.com/v2/${apiKey}`),
+            [optimism.id]: http(`https://opt-mainnet.g.alchemy.com/v2/${apiKey}`),
+            [optimismSepolia.id]: http(`https://opt-sepolia.g.alchemy.com/v2/${apiKey}`),
+            [arbitrum.id]: http(`https://arb-mainnet.g.alchemy.com/v2/${apiKey}`),
+        },
+        ssr: true,
+    })
+
+
     const liveShowYAMLs = fs.readdirSync(showsDir);
 
     let times_for_shows = {};

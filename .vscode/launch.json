@@ -78,12 +78,6 @@
         },
         {
             "type": "node",
-            "name": "Get Time Data",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "get-time-data"]
-        },
-        {
-            "type": "node",
             "name": "Fetch Chain Data",
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run", "fetch-chain-data"]

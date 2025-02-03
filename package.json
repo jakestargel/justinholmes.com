@@ -3,7 +3,6 @@
   "version": "2.0.0",
   "description": "Tools for timestamping, archiving, and producing onchain merch for bluegrass and trad music.",
   "scripts": {
-    "get-time-data": "node src/build_logic/get_time_data.js",
     "download-videos": "node src/build_logic/download_videos.js",
     "build": "webpack --config src/build_logic/webpack.prod.js",
     "dev:jh": "SKIP_CHAIN_DATA=true NODE_ENV=development webpack serve --config src/build_logic/webpack.justinholmes.dev.js",

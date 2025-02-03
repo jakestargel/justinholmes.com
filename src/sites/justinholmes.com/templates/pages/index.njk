@@ -24,4 +24,26 @@
                 commits to this project</a></h3>
             <small>(Photograph by R.J. Partington III)</small>
         </div>
+
+    <div id="page-build-metadata">
+        Page build metadata:<br/>
+        <ul>
+            <li>
+                Build on ref:
+                {{ latest_git_commit }}
+            </li>
+            <li>
+                Mainnet block height
+                {{ chainData.mainnetBlockNumber }}
+            </li>
+            <li>
+                Optimism block height
+                {{ chainData.optimismBlockNumber }}
+            </li>
+            <li>
+                Optimism Sepolia block height
+                {{ chainData.optimismSepoliaBlockNumber }}
+            </li>
+        </ul>
+    </div>
 {% endblock %}

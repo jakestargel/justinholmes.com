@@ -187,20 +187,24 @@
         state: absent
       notify: Restart Nginx
 
-    - name: Create SSH directory
-      file:
-        path: "{{ jenkins_home }}/.ssh"
-        state: directory
-        mode: '0700'
-        owner: 1000
-        group: 1000
-
-    - name: Generate SSH key for Jenkins
+    - name: Generate SSH key for root
       openssh_keypair:
-        path: "{{ jenkins_home }}/.ssh/id_ed25519"
+        path: "~/.ssh/id_ed25519"
         type: ed25519
         state: present
       register: ssh_key
+
+    # TODO: We copy the sites here, but this probably needs to be generalized somehow.
+    
+    - name: Cronjob to rsync production builds to web servers (justinholmes.com)
+      ansible.builtin.cron:
+        name: "push jh to prod"
+        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/justinholmes.com.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:justinholmes.com >> ~/justinholmes.com.rsync.log"
+    
+    - name: Cronjob to rsync production builds to web servers (cryptograss.live)
+      ansible.builtin.cron:
+        name: "push cg to prod"
+        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/cryptograss.live.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:cryptograss.live >> ~/cryptograss.live.rsync.log"
 
     - name: Display public key
       debug:
