@@ -19,7 +19,7 @@
             <div class="ensemble w-75 p-1 text-black">
                 <h4 class="mb-0 pixel-font">Ensemble:</h4>
                 {% for player, instruments in show.ensemble %}
-                    <a href="/pickers/{{ player | slugify }}">{{ player }}</a>: {{ instruments }}<br/>
+                    <a href="{{ basePath }}/pickers/{{ player | slugify }}">{{ player }}</a>: {{ instruments }}<br/>
                 {% endfor %}
             </div>
         {% endif %}
@@ -31,7 +31,7 @@
     </div>
     {% if show.has_set_stones_available %}
         <div class="set-stones-available">
-            <a href="/cryptograss/about_set_stones">Set Stones</a>
+            <a href="{{ basePath }}/cryptograss/about_set_stones">Set Stones</a>
         </div>
         {% for set_nbumber, set in show.sets %}
             {% for stone in set.setstones %}
