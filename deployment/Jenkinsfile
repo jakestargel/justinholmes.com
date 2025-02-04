@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     options {
-        buildDiscarder(logRotator(numToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '50'))
         parallelsAlwaysFailFast();
     }
 
@@ -149,10 +149,10 @@ pipeline {
                         // Create PR build directory
                         sh "mkdir -p ${PR_BUILDS_DIR}/${COMMIT_SHA}"
                         
-                        // Deploy sites
+                        // Copy build to PR build directory
+                        // TODO: Make this an artifact, and... I guess symlink it?
                         sh """
-                            rsync -av output/justinholmes.com.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/justinholmes.com/
-                            rsync -av output/cryptograss.live.dist/ ${PR_BUILDS_DIR}/${COMMIT_SHA}/cryptograss.live/
+                            rsync -av output/dist/* ${PR_BUILDS_DIR}/${COMMIT_SHA}
                         """
                         
                         // Run HTML modification script with proper Node.js setup
@@ -193,9 +193,21 @@ pipeline {
                         
                         // Add preview URLs to build description
                         currentBuild.description = previewUrls
+                    } else {
+                        sh "mkdir -p ${PR_BUILDS_DIR}/production"
+
+                        sh """
+                            rsync -av output/dist/* ${PR_BUILDS_DIR}/production
+                        """
                     }
                 }
             }
+        }
+
+    }
+    post {
+        success {
+                archiveArtifacts artifacts: 'output/**/*'
         }
     }
     

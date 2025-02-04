@@ -204,18 +204,11 @@
         hash_host: yes
         key: "|1|kXmD+AGFcaF62DEuUeuL+47t/BA=|Ri2jtfePwmmkcsa9BerY+xC+Epw= ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICbXE1f5S3N/flFHUm2i97tzKGJUWzxotY1HHBMIX72h"
         state: present
-
-    # TODO: We copy the sites here, but this probably needs to be generalized somehow.
     
-    - name: Cronjob to rsync production builds to web servers (justinholmes.com)
+    - name: Cronjob to rsync production builds to web servers
       ansible.builtin.cron:
-        name: "push jh to prod"
-        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/justinholmes.com.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:justinholmes.com >> ~/justinholmes.com.rsync.log 2>&1"
-    
-    - name: Cronjob to rsync production builds to web servers (cryptograss.live)
-      ansible.builtin.cron:
-        name: "push cg to prod"
-        job: "rsync -vah --progress --delete /var/jenkins_home/workspace/production/output/cryptograss.live.dist jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net:cryptograss.live >> ~/cryptograss.live.rsync.log 2>&1"
+        name: "push sites to prod"
+        job: "rsync -vah --progress --delete /var/jenkins_home/www/builds/production/* jmyles_justinholmescom@ssh.nyc1.nearlyfreespeech.net: >> ~/sites-rsync.log 2>&1"
 
     - name: Create Jenkins job definitions directory
       file:

@@ -39,7 +39,8 @@ export function initProjectDirs(site_name) {
     // Output directories
     projectDirs.outputBaseDir = path.resolve(projectDirs.projectRootDir, 'output');
 
-    projectDirs.outputDistDir = path.resolve(projectDirs.outputBaseDir, site_name + '.dist');
+    projectDirs.outputDistDir = path.resolve(projectDirs.outputBaseDir,
+        'dist', site_name);
 
     projectDirs.outputPrimaryRootDir = path.resolve(projectDirs.outputBaseDir, '_prebuild_output');
 
