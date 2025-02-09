@@ -339,6 +339,11 @@ export async function get_times_for_shows() {
     const { showsDir } = getProjectDirs();
     const apiKey = process.env.ALCHEMY_API_KEY;
 
+    if (apiKey === undefined || apiKey === "") {
+        throw new Error("need an apiKey to get show times. ask another cryptograsser for the secrets file")
+    }
+
+
     const config = createConfig({
         chains: [mainnet, optimism, optimismSepolia, arbitrum],
         transports: {

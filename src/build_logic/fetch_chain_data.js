@@ -10,9 +10,11 @@ import { stringify } from "./utils.js";
 
 
 async function updateChainData() {
+    console.log("starting process of fetching chain data");
     const { dataDir, chainDataDir, showsDir } = getProjectDirs();
 
     const time_data_json_path = path.resolve(dataDir, 'time_data.json');
+    console.log("fetchin onchain show times");
     const times_for_shows = await get_times_for_shows();
     const times_for_shows_json = stringify(times_for_shows);
 
