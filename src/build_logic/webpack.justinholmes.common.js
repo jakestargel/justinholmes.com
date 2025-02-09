@@ -7,17 +7,19 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { runPrimaryBuild } from './primary_builder.js';
-
-const skipChainData = process.env.SKIP_CHAIN_DATA;
-export const outputPrimaryDir = await runPrimaryBuild(skipChainData, "justinholmes.com");
 
 
-const templatesPattern = path.join(outputPrimaryDir, '**/*.html');
+
+const { outputDistDir, outputPrimaryRootDir, outputPrimarySiteDir, siteDir, site, srcDir } = getProjectDirs();
+
+// Make sure the output directory exists
+fs.mkdirSync(outputDistDir, { recursive: true });
+
+const templatesPattern = path.join(outputPrimarySiteDir, '**/*.html');
 const templateFiles = glob.sync(templatesPattern);
 
 const htmlPluginInstances = templateFiles.map(templatePath => {
-    const relativePath = path.relative(outputPrimaryDir, templatePath);
+    const relativePath = path.relative(outputPrimarySiteDir, templatePath);
 
     // Only JH.com specific routes
     if (relativePath.startsWith('music/vowel-sounds')) {
@@ -38,7 +40,6 @@ const htmlPluginInstances = templateFiles.map(templatePath => {
     });
 });
 
-const { outputDistDir, outputPrimaryRootDir, siteDir, site } = getProjectDirs();
 const frontendJSDir = path.resolve(siteDir, 'js');
 
 export default {
@@ -51,8 +52,8 @@ export default {
                     to: path.resolve(outputDistDir, 'assets')
                 },
                 {
-                    from: 'src/fetched_assets',
-                    to: 'assets',
+                    from: path.resolve(srcDir, 'fetched_assets'),
+                    to: path.resolve(outputDistDir, 'assets/fetched'),
                     globOptions: {
                         dot: true,
                         gitignore: true,

@@ -7,12 +7,11 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { runPrimaryBuild } from './primary_builder.js';
 
-const skipChainData = process.env.SKIP_CHAIN_DATA;
-const { outputPrimarySiteDir, outputPrimaryRootDir, outputDistDir, siteDir } = getProjectDirs();
+const { outputPrimarySiteDir, outputPrimaryRootDir, outputDistDir, siteDir, srcDir } = getProjectDirs();
 
-await runPrimaryBuild(skipChainData, "cryptograss.live");
+// Make sure the output directory exists
+fs.mkdirSync(outputDistDir, { recursive: true });
 
 const templatesPattern = path.join(outputPrimarySiteDir, '**/*.html');
 const templateFiles = glob.sync(templatesPattern);
@@ -68,8 +67,8 @@ export default {
                     noErrorOnMissing: true
                 },
                 {
-                    from: 'src/fetched_assets',
-                    to: 'assets',
+                    from: path.resolve(srcDir, 'fetched_assets'),
+                    to: path.resolve(outputDistDir, 'assets/fetched'),
                     globOptions: {
                         dot: true,
                         gitignore: true,

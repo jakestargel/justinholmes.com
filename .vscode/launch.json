@@ -22,9 +22,21 @@
         },
         {
             "type": "node",
-            "name": "Build All",
+            "name": "Build justinholmes.com",
             "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "build"]
+            "runtimeArgs": ["run", "build"],
+            "env": {
+                "SITE": "justinholmes.com"
+            }
+        },
+        {
+            "type": "node",
+            "name": "Build cryptograss.live",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "build"],
+            "env": {
+                "SITE": "cryptograss.live"
+            }
         },
         {
             "type": "node",
@@ -51,6 +63,24 @@
             "name": "Seed Phrase Dice",
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run", "seed-dice"]
+        },
+        {
+            "type": "node",
+            "name": "Fetch Video Metadata",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "fetch-video-metadata"]
+        },
+        {
+            "type": "node",
+            "name": "Download Videos",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "download-videos"]
+        },
+        {
+            "type": "node",
+            "name": "Fetch Chain Data",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "fetch-chain-data"]
         }
     ]
 }
