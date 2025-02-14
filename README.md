@@ -29,3 +29,8 @@ To document:
 * Cursor rules
 * Blue Railroad Train Squats video fetch
 * Dice-rolling wallet generation; cryptograss paper wallets
+
+
+
+`git submodule add git@github.com:cryptograss/happenings.git src/data/happenings`
+
