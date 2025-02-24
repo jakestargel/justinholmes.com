@@ -41,7 +41,8 @@
         <div id="setstones" class="col-6">
             {% if show.has_set_stones_available %}
                 <div class="set-stones-available">
-                    <a href="{{ basePath }}/cryptograss/about_set_stones">Set Stones</a>
+                    {# <a href="{{ basePath }}/cryptograss/about_set_stones">Set Stones</a> #}
+                    Set Stones
                 </div>
                 {% for set_nbumber, set in show.sets %}
                     {% for stone in set.setstones %}
