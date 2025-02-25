@@ -4,6 +4,9 @@ node_modules
 src/images/graphs/
 src/fetched_assets/
 
+# Only use time data from the fetching process.
+src/data/time_data.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -135,7 +138,7 @@ dmypy.json
 .pyre/
 
 .DS_Store
-.idea 
+.idea
 
 .env
 

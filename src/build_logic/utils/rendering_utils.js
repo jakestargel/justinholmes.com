@@ -17,6 +17,10 @@ export function renderPage({ template_path, context, output_path, layout = "base
         basePath: basePath
     });
 
+    if (rendered_page == null) {
+        console.log("here's the busted one")
+    }
+
     fs.writeFileSync(outputFilePath, rendered_page);
     return rendered_page;
 }
