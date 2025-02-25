@@ -80,7 +80,9 @@ export function generateSetStonePages(shows, outputDir) {
                     imageMapping,
                 };
                 const outputPath = `/artifacts/setstones/${showId}-${setstone.tokenId}.html`;
+                const outputPathForPrintable = `/artifacts/setstones/${showId}-${setstone.tokenId}-print.html`;
                 setstone.resource_url = outputPath;
+                // Profile page for online viewing.
                 renderPage({
                         template_path: 'reuse/single-set-stone.njk',
                         output_path: outputPath,
@@ -88,6 +90,15 @@ export function generateSetStonePages(shows, outputDir) {
                     site: "cryptograss.live"
                     }
                 );
+
+                // Printable version
+                renderPage({
+                    template_path: 'reuse/single-set-stone-printable.njk',
+                    output_path: outputPathForPrintable,
+                    context: context,
+                    site: "cryptograss.live"
+                });
+
             });
         });
     };

@@ -14,10 +14,23 @@
         </div>
         <div class="col-6 stone-data">
             <p>Show: {{show.title}}</p>
-            <p>{{show.local_date`}}</p>
+            <p>Showtime: {{show.blockheight}}</p>
             <p>Set #: {{set.set_number}}</p>
-            <p>Owner: {{setstone.owner}}</p>
             <p>Colors: {{colors}}</p>
+            {% if setstone.crystalizationMsg %}
+                <p>Crystalization Message: {{setstone.crystalizationMsg}}</p>
+            {% endif %}
+            <p>Favorite Song: {{show.sets[set.set_number].songplays[setstone.favoriteSong].songSlug}}</p>
+
+            {% if setstone.favoriteSong != 0 %}
+                <p>Favorite Song: {{setstone.favoriteSong}}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div id="poster-art-on-set-stone-page"class="row">
+        <div class="col-2"></div>
+        <div class="col-6 mt-3">
+            <img class="show-poster img-fluid w-75" src="{{ get_image(show.poster) }}">
         </div>
     </div>
 </div>
