@@ -20,7 +20,7 @@ sets:
         mode: segue
       - Nanny State Fiddler:
         mode: reprise
-      - Vowel Sounds
-      - Bubak and Hungaricus:
+      - Vowel Sounds:
         mode: segue
+      - Bubak and Hungaricus
       - Loser
