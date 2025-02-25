@@ -93,6 +93,9 @@ export function processShowAndSetData() {
         let artistID = showID.split('-')[0];
         let blockheight = parseInt(showID.split('-')[1]);
 
+        // TOOD: Every chain data fetch needs to store as a top level object the various block heights.  Let's use that to specifically mark that a show is in the future so that we can style future shows differently.
+
+
         let showYAMLFile = fs.readFileSync(path.resolve(showsDir, showYAML));
         let showYAMLData = yaml.load(showYAMLFile);
         showYAMLData['show_id'] = showID; // TODO: Better modeling somehow.  WWDD?
@@ -150,6 +153,11 @@ export function processShowAndSetData() {
         }
 
         let sets_in_this_show = {}
+
+        // Iterate through sets, only if there are any.
+        if (!showYAMLData.hasOwnProperty('sets')) {
+            continue;
+        }
 
         for (let [set_number, set] of Object.entries(showYAMLData['sets'])) {
 
@@ -431,6 +439,9 @@ export function processShowAndSetData() {
 
     // Now, we'll go through each set again and make a graph for song provenance.
     for (let [showID, show] of Object.entries(shows)) {
+        if (show.title == 'Allo DAO Summoning') {
+            console.log("here's the busted one")
+        }
         let show_provenances = {
             'original': 0,
             'traditional': 0,
@@ -439,6 +450,12 @@ export function processShowAndSetData() {
             'film': 0,
             'one-off': 0
         };
+
+        // If the show has no sets, we'll continue iteration.
+        if (!show.hasOwnProperty('sets')) {
+            continue; // TODO: But wait - it makes a graph anyway for a future show.  Why?  With Laura in Boulder.
+        }
+
         for (let [set_number, set] of Object.entries(show['sets'])) {
             let set_provenances = {
                 'original': 0,

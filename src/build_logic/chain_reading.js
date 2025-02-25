@@ -8,7 +8,7 @@ import {getVowelsoundContributions} from "./revealer_utils.js";
 import Web3 from 'web3';
 
 const web3 = new Web3();
-import {config as dotenvConfig} from 'dotenv'; 
+import { config as dotenvConfig } from 'dotenv';
 import {fileURLToPath} from "url";
 import path from "path";
 import fs from "fs";
@@ -355,6 +355,10 @@ export async function get_times_for_shows() {
         ssr: true,
     })
 
+    const mainnetBlockHeight = await fetchBlockNumber(config, { chainId: mainnet.id });
+    const mostRecentBlock = await getBlock(config, { chainId: mainnet.id, blockNumber: mainnetBlockHeight });
+    const timestampOfMostRecentBlock = mostRecentBlock.timestamp;
+
 
     const liveShowYAMLs = fs.readdirSync(showsDir);
 
@@ -363,9 +367,23 @@ export async function get_times_for_shows() {
         let showYAML = liveShowYAMLs[i];
         let showID = showYAML.split('.')[0];
         const block_number = showID.split('-')[1];
-        const block = await getBlock(config,
-            {chainId: mainnet.id, blockNumber: block_number});
-        times_for_shows[showID] = block.timestamp;
+
+        if (block_number < mainnetBlockHeight) {
+            console.log(`${showID} is in the past.`)
+            const block = await getBlock(config,
+                { chainId: mainnet.id, blockNumber: block_number });
+            times_for_shows[showID] = block.timestamp;
+        } else {
+            console.log(`${showID} is in the future.`)
+            // Convert to BigInt for subtraction
+            const blocksUntilShow = BigInt(block_number) - BigInt(mainnetBlockHeight);
+            // Convert back to Number for multiplication if needed
+            const secondsUntilShow = Number(blocksUntilShow) * 12;
+            const timestampOfShow = BigInt(timestampOfMostRecentBlock) + BigInt(secondsUntilShow);
+            times_for_shows[showID] = timestampOfShow;
+            console.log(`${showID} is ${secondsUntilShow} seconds away.`)
+        }
+
     }
     return times_for_shows;
 }

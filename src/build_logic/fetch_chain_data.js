@@ -14,7 +14,7 @@ async function updateChainData() {
     const { dataDir, chainDataDir, showsDir } = getProjectDirs();
 
     const time_data_json_path = path.resolve(dataDir, 'time_data.json');
-    console.log("fetchin onchain show times");
+    console.log("fetching onchain show times");
     const times_for_shows = await get_times_for_shows();
     const times_for_shows_json = stringify(times_for_shows);
 
@@ -48,7 +48,7 @@ async function updateChainData() {
         spinner.succeed('Chain data updated successfully');
         return fetchedChainData;
     } catch (error) {
-        spinner.fail('Chain data update failed');
+        // spinner.fail('Chain data update failed');
         console.error(error);
         process.exit(1);
     }
@@ -60,4 +60,4 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     updateChainData();
 }
 
-export { updateChainData }; 
+export { updateChainData };
