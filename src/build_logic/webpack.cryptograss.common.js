@@ -61,6 +61,11 @@ export default {
                     to: path.resolve(outputDistDir, 'assets')
                 },
                 {
+                    from: path.resolve(outputPrimarySiteDir, 'assets'),
+                    to: path.resolve(outputDistDir, 'assets')
+
+                },
+                {
                     from: path.resolve(outputPrimarySiteDir, 'setstones'),
                     to: path.resolve(outputDistDir, 'setstones'),
                     noErrorOnMissing: true
