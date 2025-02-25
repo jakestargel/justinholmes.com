@@ -63,18 +63,22 @@ export function registerHelpers(site) {
         } else {
             originalPath = `graphs/${artist_id}-${blockheight}-set-${setId}-provenance.png`;
         }
-        try {
-            foundImage = imageMapping[originalPath];
-        } catch (e) {
-            throw new Error(`Image not found: ${originalPath}`);
-        }
 
-        if (!foundImage) {
-            // Raise an error if the image is not found
-            throw new Error(`Image not found: ${originalPath}`);
-        } else {
-            unusedImages.delete(originalPath);
-        }
+        // TODO: We need to check to see if the show is in the future.
+        // Then we can uncomment these two failfast checks.
+
+        // try {
+        //     foundImage = imageMapping[originalPath];
+        // } catch (e) {
+        //     throw new Error(`Image not found: ${originalPath}`);
+        // }
+
+        // if (!foundImage) {
+        //     // Raise an error if the image is not found
+        //     throw new Error(`Image not found: ${originalPath}`);
+        // } else {
+        //     unusedImages.delete(originalPath);
+        // }
         return foundImage
     });
 

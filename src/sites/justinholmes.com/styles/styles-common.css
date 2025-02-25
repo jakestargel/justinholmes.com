@@ -723,3 +723,6 @@ nav a img {
 .show-poster {
     width: auto;
 }
+.all-shows-list .show-poster {
+    max-height: 75%;
+}
