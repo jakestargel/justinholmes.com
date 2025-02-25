@@ -97,6 +97,7 @@ pipeline {
 
                     # Copy shared data to workspace
                     cp -r ${SHARED_DATA_DIR}/chain_data/* ${CHAIN_DATA_DIR}
+                    cp ${CHAIN_DATA_DIR}/time_data.json src/data/time_data.json
                 '''
             }
         }
