@@ -67,6 +67,14 @@ export async function fetchChainDataForShows(shows, config) {
 
 
         // integrity check: the number of sets on chain is the same as the number of sets in the yaml, raise an error if not
+
+        if (show.sets === undefined) {
+            // There are no sets in this show, at least yet.
+            // TODO: Check to see if this show is in the future?
+            continue;
+        }
+        let numberOfSetsInYaml = Object.keys(show.sets).length;
+
         if (unpackedShowData.numberOfSets !== Object.keys(show.sets).length) {
             // throw new Error(`Number of sets on chain (${unpackedShowData.numberOfSets}) does not match the number of sets in the yaml (${show.sets.length}) for show ID ${show_id}`);
             console.log(`Error: Number of sets on chain (${unpackedShowData.numberOfSets}) does not match the number of sets in the yaml (${Object.keys(show.sets).length}) for show ID ${show_id}`);
