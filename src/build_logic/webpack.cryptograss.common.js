@@ -91,7 +91,7 @@ export default {
         main: `${frontendJSDir}/index.js`,
         strike_set_stone: `${frontendJSDir}/bazaar/strike_set_stones.js`,
         add_live_set: `${frontendJSDir}/tools/add_live_set.js`,
-        add_show_for_stone_minting: `${frontendJSDir}/bazaar/add_show_for_stone_minting.js`,
+        add_show_for_stone_minting: `${frontendJSDir}/tools/add_show_for_stone_minting.js`,
         shapes: `${frontendJSDir}/shapes.js`,
         blue_railroad: `${frontendJSDir}/bazaar/blue_railroad.js`,
     },
