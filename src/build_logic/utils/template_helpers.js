@@ -67,11 +67,12 @@ export function registerHelpers(site) {
         // TODO: We need to check to see if the show is in the future.
         // Then we can uncomment these two failfast checks.
 
-        // try {
-        //     foundImage = imageMapping[originalPath];
-        // } catch (e) {
-        //     throw new Error(`Image not found: ${originalPath}`);
-        // }
+        try {
+            foundImage = imageMapping[originalPath];
+        } catch (e) {
+            console.log(`Image not found: ${originalPath} - this show is probably in the future`);
+            // throw new Error(`Image not found: ${originalPath}`);
+        }
 
         // if (!foundImage) {
         //     // Raise an error if the image is not found
