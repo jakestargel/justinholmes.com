@@ -3,7 +3,9 @@
 <div id="content" class="container">
     <div class="row">
         <div class="col-2"></div>
-        <h3 class="pixel-font col-6 center">Set Stone {{show.show_id}}-{{set.set_number}}-{{setstone.tokenId}}</h3>
+        <h3 class="pixel-font col-6 center">
+            Set Stone {{setstone.tokenId}} ({{show.title}})
+        </h3>
 
         {# TODO: This line assumes all setstones are on arbitrum. #}
     </div>
@@ -13,7 +15,9 @@
             <img class="img-fluid" src="{{getCryptograssUrl()}}/assets/images/setstones/{{setstone.tokenId}}.png">
         </div>
         <div class="col-6 stone-data">
+
             <p>Show: {{show.title}}</p>
+            <p>Set Stone {{show.show_id}}-{{set.set_number}}-{{setstone.tokenId}}</p>
             <p>Showtime: {{show.blockheight}}</p>
             <p>Set #: {{set.set_number}}</p>
             <p>Colors: {{colors}}</p>

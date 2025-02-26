@@ -280,12 +280,25 @@ export function appendChainDataToShows(shows, chainData) {
             show["stone_price"] = chainDataForShow["stone_price"]
 
             // integrity check: the number of sets on chain is the same as the number of sets in the yaml, raise an error if not
-            if (chainDataForShow.sets.length !== Object.keys(show.sets).length) {
-                throw new Error(`Number of sets on chain (${chainDataForShow.numberOfSets}) does not match the number of sets in the yaml (${show.sets.length}) for show ID ${show_id}`);
+
+            // TODO: We're already checking this during fetch chain data - do we need to check it again?  If so, can it at least share the same logic?
+
+            let numberOfSetsInYaml;
+
+            if (show.sets === undefined) {
+                // There are no sets in this show, at least yet.
+                // TODO: Check to see if this show is in the future?
+                numberOfSetsInYaml = 0;
+            } else {
+                numberOfSetsInYaml = Object.keys(show.sets).length;
+            }
+
+            if (chainDataForShow.sets.length !== numberOfSetsInYaml) {
+                throw new Error(`Number of sets on chain (${chainDataForShow.sets.length}) does not match the number of sets in the yaml (${numberOfSetsInYaml}) for show ID ${show_id}`);
             }
 
             // unpack setShapeBySetId
-            for (let i = 0; i < Object.keys(show["sets"]).length; i++) {
+            for (let i = 0; i < numberOfSetsInYaml; i++) {
                 let set = show['sets'][i]
                 set["shape"] = chainDataForShow['sets'][i]['shape'];
                 const set_stones_for_this_Set = chainDataForShow['sets'][i]['setstones'];

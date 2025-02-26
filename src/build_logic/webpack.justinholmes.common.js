@@ -30,6 +30,8 @@ const htmlPluginInstances = templateFiles.map(templatePath => {
         var chunks = ['main', 'strike_set_stone'];
     } else if (relativePath.startsWith('magichat')) {
         var chunks = ['main', 'magic_hat'];
+    } else if (relativePath.startsWith('cryptograss/tools/add-show-for-stone-minting')) {
+        var chunks = ['main', 'add_show_for_stone_minting'];
     } else {
         var chunks = ['main'];
     }
@@ -78,6 +80,7 @@ export default {
         signing: `${frontendJSDir}/jhmusic_signing.js`,
         magic_hat: `${frontendJSDir}/magic_hat.js`,
         strike_set_stone: `${frontendJSDir}/strike_set_stones.js`,
+        add_show_for_stone_minting: `${frontendJSDir}/add_show_for_stone_minting.js`,
     },
     module: {
         rules: [
