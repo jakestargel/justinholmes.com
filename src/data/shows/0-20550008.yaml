@@ -17,8 +17,8 @@ sets:
       - Song of Storms
       - Red Haired Boy
       - Silver .44:
-        teases:
-          - Song of Storms
+      - Song of Storms:
+        mode: "tease"
       - The Goy's Teeth
       - Manzanita
       - O Death:

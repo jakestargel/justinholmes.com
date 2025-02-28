@@ -51,7 +51,7 @@ function gatherAssets() {
             return;
         }
 
-        const originalPath = path.join('assets/images', relativePath);
+        const originalPath = path.join('/assets/images', relativePath);  // TODO: use basePath here ?
         const outputPath = path.join(imageOutputDir, relativePath);
         const thumbPath = path.join(imageOutputDir, `${path.basename(file, fileExt)}-thumb${fileExt}`);
 
@@ -73,9 +73,10 @@ function gatherAssets() {
         }
 
         // Store mappings for both original and thumbnail
+        // TODO: basepath?  Instead of rewriting later?
         imageMapping[relativePath] = {
             original: originalPath,
-            thumbnail: path.join('assets/images', `${path.basename(file, fileExt)}-thumb${fileExt}`)
+            thumbnail: path.join('/assets/images', `${path.basename(file, fileExt)}-thumb${fileExt}`)
         };
 
         unusedImages.add(originalPath);

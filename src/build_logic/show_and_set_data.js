@@ -228,12 +228,6 @@ export function processShowAndSetData() {
                     for (let key in songEntry) {
                         if (key === songName) {
                             continue;
-                        }
-                        if (key === "teases") {
-                            songPlay['teases'] = [];
-                            for (let tease of songEntry[key]) {
-                                songPlay['teases'].push(tease);
-                            }
                         } else if (key === "performance_modification") {
                             // TODO: This is such a discrete piece of song logic; feels weird to handle it in a parsing loop.
                             if (songEntry[key] === "can") {
@@ -397,6 +391,13 @@ export function processShowAndSetData() {
         if (song.hasOwnProperty('by_artist')) {
 
             // If the artist is in the ensemble, we'll add a detail that it's "via" that artist.
+
+            // Sanity check.
+            if (songPlay._set._show.ensemble == undefined) {
+                throw new Error("Show ensemble for this show is undefined, so we can't check whether this song is an original or cover.");
+            }
+
+
             if (songPlay._set._show.ensemble.hasOwnProperty(song['by_artist'])) {
                 songPlay['provenance'] = 'original';
                 songPlay['detail'] = `(via ${song['by_artist']})`;
