@@ -5,7 +5,30 @@ locality: "Denver"
 region1: "Colorado"
 timezone: "America/Denver"
 poster: "posters/SCHELLINGPOINTRC4.png"
+ensemble:
+  "Justin Holmes": [ "guitar", "melodica", "six-whistle"]
+  "Skyler Golden": [ "dobro" ]
+  "Kyle Bestape": [ "mandolin" ]
+  "Laura Quam": [ "fiddle" ]
+  "Chris Elliott": [ "banjo" ]
+  "Jake Stargel": [ "bass" ]
 sets:
   0:
     songplays:
-      - Setlist to come
+      - Rueben's Train
+      - Garfield's Blackberry Blossom
+      - From Bill to Brewster:
+        ensemble-modifications:
+          featuring:
+            - Myron Davis
+      - Terrapin Station:
+        mode: "tease"
+      - From Bill to Brewster:
+        ensemble-modifications:
+          featuring:
+            - Jonathan Mann
+        mode: "reprise"
+      - Nanny State Fiddler:
+        mode: "segue"
+      - From Bill to Brewster:
+        mode: reprise
