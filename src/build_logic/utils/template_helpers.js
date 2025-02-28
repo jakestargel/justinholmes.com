@@ -21,8 +21,8 @@ export function registerHelpers(site) {
     }
 
     // Add the 'get_image' filter that looks up images in the imageMapping object
-    env.addGlobal('get_image', function (filename, imageMapping) {
-        return get_image_from_asset_mapping(filename);  // Return empty string if not found
+    env.addGlobal('get_image', function (filename, imageType) {
+        return get_image_from_asset_mapping(filename, imageType);  // Return empty string if not found
     });
 
     env.addFilter('showInstrumentalist', function (song_play, instrument_to_show) {
@@ -80,7 +80,7 @@ export function registerHelpers(site) {
         // } else {
         //     unusedImages.delete(originalPath);
         // }
-        return foundImage
+        return foundImage['original'] // TODO: Do we always want original here?  What if we want thumbnail?  Is that even a thing for graphs?  Are there other types?
     });
 
     env.addGlobal('getCryptograssUrl', () => {
