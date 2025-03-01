@@ -1,2 +1,8 @@
 by_artist_id: 0
 talk: true
+
+selected_versions:
+    - artist: Justin Holmes and Kevin Owocki
+      album: "The Green Pill Podcast"
+      year: 2024
+      youtube: "https://www.youtube.com/embed/Y3s9Fu4yu7o?si=kJkhblkwWajMMpwd"

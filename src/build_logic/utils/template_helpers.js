@@ -21,8 +21,8 @@ export function registerHelpers(site) {
     }
 
     // Add the 'get_image' filter that looks up images in the imageMapping object
-    env.addGlobal('get_image', function (filename, imageMapping) {
-        return get_image_from_asset_mapping(filename);  // Return empty string if not found
+    env.addGlobal('get_image', function (filename, imageType) {
+        return get_image_from_asset_mapping(filename, imageType);  // Return empty string if not found
     });
 
     env.addFilter('showInstrumentalist', function (song_play, instrument_to_show) {
@@ -63,19 +63,24 @@ export function registerHelpers(site) {
         } else {
             originalPath = `graphs/${artist_id}-${blockheight}-set-${setId}-provenance.png`;
         }
+
+        // TODO: We need to check to see if the show is in the future.
+        // Then we can uncomment these two failfast checks.
+
         try {
             foundImage = imageMapping[originalPath];
         } catch (e) {
-            throw new Error(`Image not found: ${originalPath}`);
+            console.log(`Image not found: ${originalPath} - this show is probably in the future`);
+            // throw new Error(`Image not found: ${originalPath}`);
         }
 
-        if (!foundImage) {
-            // Raise an error if the image is not found
-            throw new Error(`Image not found: ${originalPath}`);
-        } else {
-            unusedImages.delete(originalPath);
-        }
-        return foundImage
+        // if (!foundImage) {
+        //     // Raise an error if the image is not found
+        //     throw new Error(`Image not found: ${originalPath}`);
+        // } else {
+        //     unusedImages.delete(originalPath);
+        // }
+        return foundImage['original'] // TODO: Do we always want original here?  What if we want thumbnail?  Is that even a thing for graphs?  Are there other types?
     });
 
     env.addGlobal('getCryptograssUrl', () => {

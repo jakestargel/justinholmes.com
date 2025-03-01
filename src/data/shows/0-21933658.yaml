@@ -1,0 +1,25 @@
+title: "Allo DAO Summoning"
+venue: "Gitcoin Church"
+host: "Allo DAO"
+locality: "Denver"
+region1: "Colorado"
+timezone: "America/Denver"
+poster: "posters/ALLODAORC5.png"
+ensemble:
+  "Justin Holmes": [ "guitar", "melodica", "six-whistle"]
+  "Skyler Golden": [ "dobro" ]
+  "Kyle Bestape": [ "mandolin" ]
+  "Laura Quam": [ "fiddle" ]
+  "Chris Elliott": [ "banjo" ]
+  "Jake Stargel": [ "bass" ]
+sets:
+  0:
+    songplays:
+      - Hell or high water
+      - Clinch Mountain Backstep
+      - Shady Grove
+      - Drowsy Maggie
+      - Paint Exchange  # Jake on guitar, Justin on mando
+      - You and Whose Army
+      - Song of Storms
+      - Salt Creek

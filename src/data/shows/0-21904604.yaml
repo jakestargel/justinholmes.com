@@ -1,5 +1,5 @@
 title: "GFEL Boulder 2025"
-poster: "alienGFEL_POSTER.png"
+poster: "posters/GFELRC4.png"
 venue: "The Riverside"
 host: "Global Forum for Ethereum Localism"
 locality: "Boulder"
@@ -10,7 +10,7 @@ ensemble:
   "Skyler Golden": [ "dobro" ]
   "Kyle Bestape": [ "mandolin" ]
   "Laura Quam": [ "fiddle" ]
-
+  "Jake Stargel": [ "bass" ]
 sets:
   0:
     songplays:
@@ -20,7 +20,7 @@ sets:
         mode: segue
       - Nanny State Fiddler:
         mode: reprise
-      - Vowel Sounds
-      - Bubak and Hungaricus:
+      - Vowel Sounds:
         mode: segue
+      - Bubak and Hungaricus
       - Loser

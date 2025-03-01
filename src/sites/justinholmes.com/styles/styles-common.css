@@ -538,11 +538,18 @@ nav a img {
     color: #b4beb0;
 }
 
-#setlist .original a {
+#setlist .tease-mode {
+    margin-left: 1em;
+    font-size: 12px;
+}
+
+#setlist .original-detail {
     color: #7692ff;
 }
 
-#setlist .video-game-detail {
+/* TODO: Settle on one convention for this. */
+#setlist .video-game-detail,
+#setlist .video_game-detail {
     color: rgb(192, 4, 4);
 }
 
@@ -551,7 +558,7 @@ nav a img {
 }
 
 #setlist .traditional-detail {
-    color: rgb(98, 147, 57);
+    color: rgb(91, 198, 0);
 }
 
 .set-stones-available {
@@ -722,4 +729,7 @@ nav a img {
 }
 .show-poster {
     width: auto;
+}
+.all-shows-list .show-poster {
+    max-height: 75%;
 }

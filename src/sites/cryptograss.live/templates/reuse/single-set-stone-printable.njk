@@ -1,0 +1,40 @@
+{# {% include 'partials/bigger-banner.njk' %} #}
+
+<div id="content" class="container">
+    <div class="row">
+        <div class="col-2"></div>
+        <h3 class="pixel-font col-6 center">
+            Set Stone {{setstone.tokenId}} ({{show.title}})
+        </h3>
+
+        {# TODO: This line assumes all setstones are on arbitrum. #}
+    </div>
+    <div class="row mt-3">
+        <div class="col-2"></div>
+        <div class="col-2 stone-data">
+            <img class="img-fluid" src="{{getCryptograssUrl()}}/assets/images/setstones/{{setstone.tokenId}}.png">
+        </div>
+        <div class="col-6 stone-data">
+
+            <p>Show: {{show.title}}</p>
+            <p>Set Stone {{show.show_id}}-{{set.set_number}}-{{setstone.tokenId}}</p>
+            <p>Showtime: {{show.blockheight}}</p>
+            <p>Set #: {{set.set_number}}</p>
+            <p>Colors: {{colors}}</p>
+            {% if setstone.crystalizationMsg %}
+                <p>Crystalization Message: {{setstone.crystalizationMsg}}</p>
+            {% endif %}
+            <p>Favorite Song: {{show.sets[set.set_number].songplays[setstone.favoriteSong].songSlug}}</p>
+
+            {% if setstone.favoriteSong != 0 %}
+                <p>Favorite Song: {{setstone.favoriteSong}}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div id="poster-art-on-set-stone-page"class="row">
+        <div class="col-2"></div>
+        <div class="col-6 mt-3">
+            <img class="show-poster img-fluid w-75" src="{{ get_image(show.poster) }}">
+        </div>
+    </div>
+</div>

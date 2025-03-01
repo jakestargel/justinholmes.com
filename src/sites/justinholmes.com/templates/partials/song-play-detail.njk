@@ -1,0 +1,32 @@
+{% if songPlay.mode == "tease" %}<span class="tease-mode">[{% endif %}
+    {% if songPlay.mode == "reprise" %}
+        <span style="color:#fff7ae">
+            <b>⇚</b>
+        </span>
+    {% endif %}
+    {% if songPlay.mode == "scratch" %}
+        <s>
+        {% endif %}
+        <a href="{{songPlay._song.resource_url}}" class="{{songPlay.mode}}-mode">
+            <span class="{{songPlay.provenance}}-detail">&#x260D;&#xfe0e;  </span>{{songPlay._song.title}}</a>
+        {% if songPlay.mode == "scratch" %}
+        </s> ({{songPlay.scratch_reason}}){% endif %}
+    {% if songPlay.provenance == "traditional" %}
+        <span class="traditional-detail">(Traditional)</span>
+    {% endif %}
+    {% if songPlay.provenance == "cover" %}
+        <span class="cover-detail">({{songPlay._song.by_artist}} cover)</span>
+    {% endif %}
+    {% if songPlay.provenance == "video_game" %}
+        <span class="video-game-detail">(from {{songPlay._song.video_game}})</span>
+    {% endif %}
+    {% if songPlay.detail %}
+        <span>{{songPlay.detail}}</span>
+    {% endif %}
+    {% if songPlay.mode == "segue" %}
+        <span style="color:#fff7ae">
+            <b>⇛</b>
+        </span>
+    {% endif %}
+    {% if songPlay.mode == "tease" %}]</span>
+{% endif %}

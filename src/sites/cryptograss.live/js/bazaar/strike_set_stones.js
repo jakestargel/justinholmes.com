@@ -275,7 +275,7 @@ watchConnections(config, {
         const account = getAccount(config);
         if (account.isConnected) {
             console.log('Wallet is connected:', account.address);
-            renderOwnedVowelSoundArtifacts(account.address);
+            // renderOwnedVowelSoundArtifacts(account.address);
             // You can add additional logic here for when the wallet is connected
         }
     },

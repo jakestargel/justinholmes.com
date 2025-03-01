@@ -237,36 +237,36 @@ function randomizeColors() {
 }
 
 // TODO: This needs to be generalized and moved alongside other trophy case rendering logic.
-async function renderOwnedVowelSoundArtifacts(address) {
-    // filter the vowelSoundContributions array to only include the contributions of the given address
-    const filteredVowelSoundContributions = vowelSoundContributions.filter(contribution => contribution.address === address);
-    console.log(filteredVowelSoundContributions);
+// async function renderOwnedVowelSoundArtifacts(address) {
+//     // filter the vowelSoundContributions array to only include the contributions of the given address
+//     const filteredVowelSoundContributions = vowelSoundContributions.filter(contribution => contribution.address === address);
+//     console.log(filteredVowelSoundContributions);
 
-    // get the unrendered ownedVowelSoundArtifacts from the servernunjucks
-    const large_vowel_sounds_artifact_display_response = await fetch('/partials/owned_vowelsound_artifacts.njk');
-    const templateText = await large_vowel_sounds_artifact_display_response.text();
+//     // get the unrendered ownedVowelSoundArtifacts from the servernunjucks
+//     const large_vowel_sounds_artifact_display_response = await fetch('/partials/owned_vowelsound_artifacts.njk');
+//     const templateText = await large_vowel_sounds_artifact_display_response.text();
 
-    const small_trophycase_response = await fetch('/partials/small_trophycase.njk');
-    const small_trophycase_template = await small_trophycase_response.text();
+//     const small_trophycase_response = await fetch('/partials/small_trophycase.njk');
+//     const small_trophycase_template = await small_trophycase_response.text();
 
-    // Compile the templates
-    const template = nunjucks.compile(templateText);
+//     // Compile the templates
+//     const template = nunjucks.compile(templateText);
 
-    // TODO: Better for this to live somewhere else, where Set Stones, Blue Railroads, Ursa Minors, etc. can also be rendered
-    const compiled_small_trophycase_template = nunjucks.compile(small_trophycase_template);
+//     // TODO: Better for this to live somewhere else, where Set Stones, Blue Railroads, Ursa Minors, etc. can also be rendered
+//     const compiled_small_trophycase_template = nunjucks.compile(small_trophycase_template);
 
-    // Render the template with the context
-    const renderedHtml = template.render({ artifacts: filteredVowelSoundContributions });
+//     // Render the template with the context
+//     const renderedHtml = template.render({ artifacts: filteredVowelSoundContributions });
 
-    // Append the rendered HTML to the DOM
-    document.getElementById('vowelSoundContributions').innerHTML = renderedHtml;
+//     // Append the rendered HTML to the DOM
+//     document.getElementById('vowelSoundContributions').innerHTML = renderedHtml;
 
-    // Render the small trophy case
-    const rendered_small_trophycase = compiled_small_trophycase_template.render({ artifacts: filteredVowelSoundContributions });
+//     // Render the small trophy case
+//     const rendered_small_trophycase = compiled_small_trophycase_template.render({ artifacts: filteredVowelSoundContributions });
 
-    document.getElementById('top-fixed-area').innerHTML = rendered_small_trophycase;
+//     document.getElementById('top-fixed-area').innerHTML = rendered_small_trophycase;
 
-}
+// }
 
 watchConnections(config, {
     onChange(data) {
@@ -275,7 +275,7 @@ watchConnections(config, {
         const account = getAccount(config);
         if (account.isConnected) {
             console.log('Wallet is connected:', account.address);
-            renderOwnedVowelSoundArtifacts(account.address);
+            // renderOwnedVowelSoundArtifacts(account.address);
             // You can add additional logic here for when the wallet is connected
         }
     },

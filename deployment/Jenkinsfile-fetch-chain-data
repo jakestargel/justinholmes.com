@@ -1,13 +1,13 @@
 pipeline {
     agent any
-    
+
     environment {
         NODE_VERSION = '23.6.1'
         NVM_DIR = '/var/jenkins_home/.nvm'
         SHARED_DATA_DIR = '/var/jenkins_home/shared'
         CHAIN_DATA_DIR = "${SHARED_DATA_DIR}/chain_data"
     }
-    
+
     stages {
         stage('Setup') {
             steps {
@@ -21,7 +21,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Fetch Chain Data') {
             steps {
                 sh '''
@@ -32,11 +32,12 @@ pipeline {
 
                     # Copy the data to shared location
                     cp -r output/_prebuild_chain_data/* ${CHAIN_DATA_DIR}/
+                    cp src/data/time_data.json ${CHAIN_DATA_DIR}/
                 '''
             }
         }
     }
-    
+
     post {
         success {
             // Touch a file to indicate successful completion
